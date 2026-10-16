@@ -96,7 +96,7 @@ function findContact(text: string, contacts: Contact[]): Contact | undefined {
   return contacts.find((contact) => {
     if (contact.relation !== "other") return false;
     return [contact.relationLabel.en, contact.relationLabel.hi, contact.relationLabel.ta].some(
-      (label) => label.trim().length > 1 && value.includes(label.toLowerCase()),
+      (label) => Boolean(label && label.trim().length > 1 && value.includes(label.toLowerCase())),
     );
   });
 }

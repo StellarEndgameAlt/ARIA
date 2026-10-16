@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Volume2 } from "lucide-react";
 import type { Lang } from "@/lib/mitra/data";
+import { ensureLang, t } from "@/lib/mitra/i18n";
 import { intentKey } from "@/lib/mitra/intents";
-import { t, type CopyKey } from "@/lib/mitra/i18n";
+import { LANGUAGES } from "@/lib/mitra/languages";
 import { speak } from "@/lib/mitra/speech";
 import { useMitra } from "@/lib/mitra/store";
 
@@ -145,37 +146,41 @@ export function Understood() {
   );
 }
 
-const languageOrder: Lang[] = ["en", "hi", "ta"];
-const languageKey: Record<Lang, CopyKey> = {
-  en: "langEn",
-  hi: "langHi",
-  ta: "langTa",
-};
-
 export function LangSwitch({ speakOnChange = false }: { speakOnChange?: boolean }) {
   const lang = useMitra((state) => state.lang);
   const setLang = useMitra((state) => state.setLang);
   const name = useMitra((state) => state.seniorName);
   const rate = useMitra((state) => state.rate);
+  const [busy, setBusy] = useState<Lang | null>(null);
 
   return (
-    <div className="grid grid-cols-3 gap-2" role="group" aria-label={t(lang, "language")}>
-      {languageOrder.map((code) => {
-        const selected = code === lang;
+    <div
+      className="-mx-1 flex gap-2 overflow-x-auto overscroll-contain px-1 pb-1"
+      role="group"
+      aria-label={t(lang, "language")}
+    >
+      {LANGUAGES.map((option) => {
+        const selected = option.code === lang;
         return (
           <button
-            key={code}
+            key={option.code}
             type="button"
             aria-pressed={selected}
+            disabled={busy !== null && busy !== option.code}
             onClick={() => {
-              setLang(code);
-              if (speakOnChange) speak(t(code, "welcomeSpeak", { name }), code, rate);
+              if (option.code === lang || busy) return;
+              setBusy(option.code);
+              void ensureLang(option.code).then(() => {
+                setLang(option.code);
+                setBusy(null);
+                if (speakOnChange) speak(t(option.code, "welcomeSpeak", { name }), option.code, rate);
+              });
             }}
-            className={`min-h-12 rounded-2xl px-2 text-lg font-semibold ${
+            className={`min-h-14 shrink-0 rounded-full px-4 text-lg font-semibold ${
               selected ? "bg-forest text-paper" : "border border-line bg-card text-ink"
             }`}
           >
-            {t(code, languageKey[code])}
+            {busy === option.code ? "…" : option.native}
           </button>
         );
       })}

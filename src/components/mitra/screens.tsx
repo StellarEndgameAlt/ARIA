@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import {
   type Contact,
-  type Lang,
   type Medicine,
   type MedStatus,
   type Relation,
@@ -27,7 +26,8 @@ import {
   todayKey,
   tx,
 } from "@/lib/mitra/data";
-import { t } from "@/lib/mitra/i18n";
+import { ensureLang, prefetchLangs, t } from "@/lib/mitra/i18n";
+import { LANGUAGES, preloadPickerFonts, type Lang } from "@/lib/mitra/languages";
 import { speak } from "@/lib/mitra/speech";
 import { noteLangChoice, useMitra } from "@/lib/mitra/store";
 import {
@@ -58,39 +58,53 @@ export function LanguageScreen() {
   const chooseLang = useMitra((state) => state.chooseLang);
   const name = useMitra((state) => state.seniorName);
   const rate = useMitra((state) => state.rate);
-  const options: { code: Lang; label: string }[] = [
-    { code: "en", label: "English" },
-    { code: "hi", label: "हिन्दी" },
-    { code: "ta", label: "தமிழ்" },
-  ];
+  const [busy, setBusy] = useState<Lang | null>(null);
+
+  useEffect(() => {
+    preloadPickerFonts();
+    const id = window.setTimeout(() => prefetchLangs(), 250);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  async function pick(code: Lang) {
+    if (busy) return;
+    setBusy(code);
+    noteLangChoice(code);
+    try {
+      await ensureLang(code);
+      chooseLang(code);
+      speak(t(code, "welcomeSpeak", { name }), code, rate);
+    } catch {
+      setBusy(null);
+    }
+  }
 
   return (
-    <div className="flex flex-1 flex-col justify-center gap-8">
-      <div className="flex flex-col items-center gap-3 text-center">
-        <Mark badge className="size-24" />
-        <div>
-          <h1 className="text-5xl font-semibold tracking-tight text-forest">ARIA</h1>
-          <p className="mt-2 text-xl font-medium text-muted">Your friendly voice assistant</p>
-        </div>
+    <div className="flex min-h-0 flex-1 flex-col gap-5">
+      <div className="flex shrink-0 flex-col items-center gap-2 text-center">
+        <Mark badge className="size-16" />
+        <h1 className="text-4xl font-semibold tracking-tight text-forest">ARIA</h1>
+        <p className="text-lg font-medium text-muted">Your friendly voice assistant</p>
       </div>
-      <div className="space-y-1 text-center text-xl leading-snug">
-        <p>Choose your language</p>
-        <p>अपनी भाषा चुनें</p>
-        <p>உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்</p>
-      </div>
-      <div className="flex flex-col gap-3">
-        {options.map((option) => (
+      <p className="shrink-0 text-center text-xl font-semibold">Choose your language</p>
+      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain pb-2">
+        {LANGUAGES.map((option) => (
           <button
             key={option.code}
             type="button"
-            onClick={() => {
-              noteLangChoice(option.code);
-              chooseLang(option.code);
-              speak(t(option.code, "welcomeSpeak", { name }), option.code, rate);
-            }}
-            className="flex min-h-24 w-full items-center justify-center rounded-3xl border border-line bg-card text-4xl font-semibold text-ink transition-transform active:scale-[0.99] motion-reduce:transform-none"
+            disabled={busy !== null}
+            onClick={() => void pick(option.code)}
+            className="flex min-h-20 w-full items-center justify-between gap-3 rounded-3xl border border-line bg-card px-5 text-left disabled:opacity-70"
           >
-            {option.label}
+            <span className="min-w-0">
+              <span className="block text-3xl leading-tight font-semibold">{option.native}</span>
+              {option.code === "en" ? null : (
+                <span className="block text-lg text-muted">{option.english}</span>
+              )}
+            </span>
+            <span className="text-2xl font-semibold text-forest" aria-hidden="true">
+              {busy === option.code ? "…" : ""}
+            </span>
           </button>
         ))}
       </div>

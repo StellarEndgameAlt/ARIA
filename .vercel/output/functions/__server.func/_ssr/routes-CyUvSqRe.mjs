@@ -2,127 +2,384 @@ import { i as __toESM } from "../_runtime.mjs";
 import { K as require_react, b as require_jsx_runtime } from "../_libs/@tanstack/react-router+[...].mjs";
 import { a as Phone, c as MessageCircle, i as Pill, l as ArrowLeft, o as PhoneOff, r as Plus, s as Mic, t as Volume2 } from "../_libs/lucide-react.mjs";
 import { n as persist, r as create, t as createJSONStorage } from "../_libs/zustand.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-CqqCkcoH.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-CyUvSqRe.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var blankText = {
-	en: "",
-	hi: "",
-	ta: ""
+var LANGUAGES = [
+	{
+		code: "en",
+		native: "English",
+		english: "English",
+		locale: "en-IN"
+	},
+	{
+		code: "hi",
+		native: "हिन्दी",
+		english: "Hindi",
+		locale: "hi-IN"
+	},
+	{
+		code: "bn",
+		native: "বাংলা",
+		english: "Bengali",
+		locale: "bn-IN"
+	},
+	{
+		code: "te",
+		native: "తెలుగు",
+		english: "Telugu",
+		locale: "te-IN"
+	},
+	{
+		code: "mr",
+		native: "मराठी",
+		english: "Marathi",
+		locale: "mr-IN"
+	},
+	{
+		code: "ta",
+		native: "தமிழ்",
+		english: "Tamil",
+		locale: "ta-IN"
+	},
+	{
+		code: "ur",
+		native: "اردو",
+		english: "Urdu",
+		locale: "ur-IN"
+	},
+	{
+		code: "gu",
+		native: "ગુજરાતી",
+		english: "Gujarati",
+		locale: "gu-IN"
+	},
+	{
+		code: "kn",
+		native: "ಕನ್ನಡ",
+		english: "Kannada",
+		locale: "kn-IN"
+	},
+	{
+		code: "or",
+		native: "ଓଡ଼ିଆ",
+		english: "Odia",
+		locale: "or-IN"
+	},
+	{
+		code: "ml",
+		native: "മലയാളം",
+		english: "Malayalam",
+		locale: "ml-IN"
+	},
+	{
+		code: "pa",
+		native: "ਪੰਜਾਬੀ",
+		english: "Punjabi",
+		locale: "pa-IN"
+	}
+];
+var codes = new Set(LANGUAGES.map((item) => item.code));
+function isLang(value) {
+	return codes.has(value);
+}
+function localeOf(lang) {
+	return LANGUAGES.find((item) => item.code === lang)?.locale ?? "en-IN";
+}
+var PICKER_FONTS = "https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@600;700&family=Noto+Sans+Gujarati:wght@600;700&family=Noto+Sans+Gurmukhi:wght@600;700&family=Noto+Sans+Kannada:wght@600;700&family=Noto+Sans+Malayalam:wght@600;700&family=Noto+Sans+Oriya:wght@600;700&family=Noto+Sans+Tamil:wght@600;700&family=Noto+Sans+Telugu:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap";
+function preloadPickerFonts() {
+	if (typeof document === "undefined" || document.getElementById("aria-fonts")) return;
+	const link = document.createElement("link");
+	link.id = "aria-fonts";
+	link.rel = "stylesheet";
+	link.href = PICKER_FONTS;
+	document.head.appendChild(link);
+}
+var en = {
+	hello: "Namaste,",
+	brand: "ARIA",
+	tagline: "Your friendly voice assistant",
+	homeLine: "I am ARIA, your friendly voice assistant. Tap the big circle and speak slowly. Or press a button below.",
+	welcomeSpeak: "Namaste {name}. I am ARIA, your friendly voice assistant. How can I help you?",
+	tapSpeak: "Tap and speak",
+	listening: "I am listening",
+	speakSlowly: "Speak slowly. I am here.",
+	cancel: "Stop",
+	heard: "I heard",
+	notUnderstood: "I did not understand. Please say medicine, call, or ask the time.",
+	noisy: "I could not hear you clearly. It may be noisy. Try again somewhere quiet, or tap a button.",
+	noMic: "This phone cannot use the microphone right now. You can still tap a button. That works the same.",
+	tryAgain: "Try again",
+	orTap: "Or tap one of these",
+	medicine: "My tablets",
+	medicineSub: "Today's reminders",
+	call: "Call family",
+	callSub: "Son, daughter, grandson",
+	ask: "Ask something",
+	askSub: "Time, date, simple answers",
+	family: "Family setup",
+	backHome: "Back home",
+	back: "Back",
+	hear: "Hear this",
+	dueBanner: "Your {med} is due",
+	medIntro: "These tablets were saved by your family from the doctor's note. ARIA never changes the dose, and never gives medical advice.",
+	dueLine: "{name}, it is time for your {med}. {dose}. Did you take it?",
+	nextLine: "{name}, your next tablet is {med} at {time}. Nothing is due right now.",
+	allDoneLine: "{name}, today's tablets are all marked as taken. Well done.",
+	noMeds: "Your family has not saved any tablets yet.",
+	yesTook: "Yes, I took it",
+	remindLater: "Remind me later",
+	feelUnwell: "I do not feel well",
+	marked: "Well done, {name}. I have marked that tablet as taken.",
+	snoozed: "All right. I will remind you again in a little while.",
+	stillScheduled: "I will remind you at {time}.",
+	goOn: "All right",
+	safetyAdvice: "I cannot give medical advice. Please take only what the doctor prescribed, the way your family saved it here. If you are unsure, I can call your family.",
+	safetyUnwell: "I am sorry you feel unwell. I cannot give medical advice. If you need help, I can call your family now.",
+	callThem: "Call my family",
+	seeTablets: "See my tablets",
+	callIntro: "Who should I call? I will ask you to say yes before I call.",
+	sample: "Sample number. Not a real phone.",
+	confirmLine: "Shall I call {name}, your {relation}? I will call only if you say yes.",
+	yesCall: "Yes, call now",
+	noBack: "No, go back",
+	calling: "Calling {name}",
+	practice: "Practice call. No real phone is dialed.",
+	connected: "{name} is on the line.",
+	hangUp: "Hang up",
+	ended: "The call has ended. No real phone was used.",
+	unknownLine: "I do not have {name} saved. Your family saved {list}. Who should I call?",
+	someone: "that name",
+	askIntro: "Ask me the time, the date, or something simple. I will answer slowly.",
+	qTime: "What is the time?",
+	qDate: "What is today's date?",
+	qNext: "When is my next tablet?",
+	qWho: "Who are you?",
+	qKind: "Say something kind",
+	qWeather: "How is the weather?",
+	aTime: "The time is {time}.",
+	aDate: "Today is {date}.",
+	aWho: "I am ARIA, your friendly voice assistant. Your family set me up. I remind you about tablets, I call your family, and I answer simple questions.",
+	aKind: "You are not alone at home. Your family kept me here so you can ask for help in your own words.",
+	aWeather: "I cannot see outside. Please look through the window, or ask someone at home.",
+	aNext: "Your next tablet is {med} at {time}.",
+	aNone: "All of today's tablets are marked as taken.",
+	matched: "I understood this as: {what}",
+	intentMedicine: "a medicine reminder",
+	intentCall: "a phone call",
+	intentTime: "the time",
+	intentDate: "the date",
+	intentWeather: "the weather",
+	intentWho: "who I am",
+	intentKind: "a kind word",
+	intentNext: "your next tablet",
+	intentAdvice: "something I must not advise",
+	intentUnwell: "feeling unwell",
+	intentUnknownName: "a name I do not know",
+	intentUnknown: "unclear words",
+	intentTook: "tablet taken",
+	intentLater: "remind later",
+	intentList: "your family list",
+	familyTitle: "For the family",
+	familyLead: "Set this up once. Copy tablets from the doctor's note. ARIA will only remind. ARIA will never give medical advice.",
+	personaTitle: "Who this practice is for",
+	personaBody: "Kamala is 74. She uses the language you set here. Small phone text is hard on her eyes, and stiff fingers miss tiny buttons. She needs tablet reminders, a careful call to family, and simple answers. She does not need medical advice from an app.",
+	elderName: "Elder's name",
+	language: "Language they speak",
+	speech: "Speaking speed",
+	slow: "Slow",
+	slower: "Very slow",
+	tablets: "Tablets from the doctor's note",
+	addTablet: "Add a tablet",
+	contactsTitle: "Family to call",
+	addContact: "Add a person",
+	medName: "Tablet name",
+	dose: "Dose, in simple words",
+	timeLabel: "Time",
+	save: "Save",
+	remove: "Remove",
+	personName: "Name",
+	relation: "Who they are",
+	phone: "Sample phone number",
+	son: "son",
+	daughter: "daughter",
+	grandson: "grandson",
+	other: "other",
+	otherRelation: "Write who they are",
+	restore: "Restore the practice family",
+	restoreAsk: "Put the practice family back? The changes you made will be cleared.",
+	practiceTitle: "Try these sentences",
+	practiceLead: "Tap a sentence to see what ARIA does. Three of them are tricky on purpose.",
+	typeNote: "Write in the language your elder reads.",
+	removeAsk: "Remove this?",
+	keep: "Keep it",
+	keepOne: "Keep at least one person to call.",
+	statusDue: "Due now",
+	statusTaken: "Taken",
+	statusLater: "Later",
+	statusWaiting: "Later today",
+	tricky: "Tricky",
+	noiseCase: "Too much noise around me",
+	andWord: "and",
+	chooseEn: "Choose your language",
+	chooseHi: "अपनी भाषा चुनें",
+	chooseTa: "உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்",
+	safetyHome: "I only remind you. I do not give medical advice.",
+	ready: "Ready",
+	nameMissing: "Please type a name.",
+	doseMissing: "Please type the dose.",
+	savedOk: "Saved.",
+	clockNow: "Time now",
+	rowLine: "{time}. {med}. {dose}.",
+	langEn: "English",
+	langHi: "हिन्दी",
+	langTa: "தமிழ்"
 };
-function tx(text, lang) {
-	return text[lang] || text.en;
+var cache = /* @__PURE__ */ new Map([["en", en]]);
+var inflight = /* @__PURE__ */ new Map();
+var loaders = {
+	hi: () => import("./hi-D3VEphNC.mjs"),
+	bn: () => import("./bn-DgBXGsCp.mjs"),
+	te: () => import("./te-BdANPcxG.mjs"),
+	mr: () => import("./mr-xOd8ExhL.mjs"),
+	ta: () => import("./ta-U_PTyGCm.mjs"),
+	ur: () => import("./ur-Crstmjbl.mjs"),
+	gu: () => import("./gu-CiZh-HX2.mjs"),
+	kn: () => import("./kn-ZMDpJe38.mjs"),
+	or: () => import("./or-Ds507rw8.mjs"),
+	ml: () => import("./ml-CwhLvrNE.mjs"),
+	pa: () => import("./pa-CD1IDq2m.mjs")
+};
+function hasLang(lang) {
+	return cache.has(lang);
+}
+function ensureLang(lang) {
+	const ready = cache.get(lang);
+	if (ready) return Promise.resolve(ready);
+	if (lang === "en") return Promise.resolve(en);
+	let pending = inflight.get(lang);
+	if (!pending) {
+		pending = loaders[lang]().then((mod) => {
+			cache.set(lang, mod.default);
+			inflight.delete(lang);
+			return mod.default;
+		});
+		inflight.set(lang, pending);
+	}
+	return pending;
+}
+function prefetchLangs() {
+	for (const code of Object.keys(loaders)) ensureLang(code);
+}
+function peekSavedLang() {
+	if (typeof window === "undefined") return null;
+	try {
+		const raw = window.localStorage.getItem("mitra-v1");
+		if (!raw) return null;
+		const lang = JSON.parse(raw)?.state?.lang;
+		return typeof lang === "string" && isLang(lang) ? lang : null;
+	} catch {
+		return null;
+	}
+}
+var saved = peekSavedLang();
+if (saved && saved !== "en") ensureLang(saved);
+function t(lang, key, vars) {
+	let text = (cache.get(lang) ?? en)[key] ?? en[key];
+	if (vars) for (const [name, value] of Object.entries(vars)) text = text.replaceAll(`{${name}}`, value);
+	return text;
+}
+function loc(en, hi, ta) {
+	return {
+		en,
+		hi,
+		ta
+	};
+}
+function tx(value, lang) {
+	if (!value) return "";
+	const direct = value[lang];
+	if (direct && direct.trim()) return direct;
+	return value.en ?? "";
 }
 function fillLang(text) {
 	const value = text.trim();
+	return Object.fromEntries(LANGUAGES.map((item) => [item.code, value]));
+}
+function editLocalized(current, lang, text) {
 	return {
-		en: value,
-		hi: value,
-		ta: value
+		...current,
+		en: current.en,
+		[lang]: text.trim()
 	};
-}
-function editLocalized(prev, lang, next) {
-	if (next.trim() === prev[lang]) return prev;
-	return fillLang(next);
-}
-function localeOf(lang) {
-	if (lang === "hi") return "hi-IN";
-	if (lang === "ta") return "ta-IN";
-	return "en-IN";
 }
 function todayKey(date = /* @__PURE__ */ new Date()) {
 	const month = String(date.getMonth() + 1).padStart(2, "0");
 	const day = String(date.getDate()).padStart(2, "0");
 	return `${date.getFullYear()}-${month}-${day}`;
 }
+function medStatus(med, now, takenIds, snoozeUntil) {
+	if (takenIds.includes(med.id)) return "taken";
+	if (snoozeUntil && snoozeUntil > now.getTime()) return "later";
+	const [hour, minute] = med.time.split(":").map(Number);
+	const dueAt = new Date(now);
+	dueAt.setHours(hour || 0, minute || 0, 0, 0);
+	return now.getTime() >= dueAt.getTime() ? "due" : "waiting";
+}
+function focusMedicine(medicines, now, takenIds, snooze) {
+	const ordered = [...medicines].sort((a, b) => a.time.localeCompare(b.time));
+	const due = ordered.find((med) => medStatus(med, now, takenIds, snooze[med.id]) === "due");
+	if (due) return due;
+	return ordered.find((med) => {
+		const status = medStatus(med, now, takenIds, snooze[med.id]);
+		return status === "waiting" || status === "later";
+	}) ?? null;
+}
 function formatTime(date, lang) {
-	return date.toLocaleTimeString(localeOf(lang), {
+	return new Intl.DateTimeFormat(localeOf(lang), {
 		hour: "numeric",
 		minute: "2-digit"
-	});
-}
-function formatClockLabel(hhmm, lang) {
-	const [h, m] = hhmm.split(":").map(Number);
-	const date = /* @__PURE__ */ new Date();
-	date.setHours(h || 0, m || 0, 0, 0);
-	return formatTime(date, lang);
+	}).format(date);
 }
 function formatDate(date, lang) {
-	return date.toLocaleDateString(localeOf(lang), {
+	return new Intl.DateTimeFormat(localeOf(lang), {
 		weekday: "long",
 		day: "numeric",
 		month: "long"
-	});
+	}).format(date);
+}
+function formatClockLabel(time, lang) {
+	const [hour, minute] = time.split(":").map(Number);
+	const date = /* @__PURE__ */ new Date();
+	date.setHours(hour || 0, minute || 0, 0, 0);
+	return formatTime(date, lang);
 }
 function joinList(items, andWord) {
-	if (items.length === 0) return "";
-	if (items.length === 1) return items[0] ?? "";
-	if (items.length === 2) return `${items[0]} ${andWord} ${items[1]}`;
+	if (items.length <= 1) return items[0] ?? "";
 	return `${items.slice(0, -1).join(", ")} ${andWord} ${items[items.length - 1]}`;
 }
-var relationCall = {
-	son: {
-		en: "son",
-		hi: "बेटे",
-		ta: "மகன்"
-	},
-	daughter: {
-		en: "daughter",
-		hi: "बेटी",
-		ta: "மகள்"
-	},
-	grandson: {
-		en: "grandson",
-		hi: "पोते",
-		ta: "பேரன்"
-	}
-};
 function relationForCall(contact, lang) {
-	if (contact.relation === "other") return tx(contact.relationLabel, lang) || contact.name;
-	return relationCall[contact.relation][lang];
+	if (contact.relation === "other") return tx(contact.relationLabel, lang);
+	return t(lang, contact.relation);
 }
 var defaultMedicines = [
 	{
 		id: "bp",
-		time: "08:00",
-		name: {
-			en: "Blood pressure tablet",
-			hi: "रक्तचाप की गोली",
-			ta: "இரத்த அழுத்த மாத்திரை"
-		},
-		dose: {
-			en: "One tablet with water",
-			hi: "पानी के साथ एक गोली",
-			ta: "தண்ணீருடன் ஒரு மாத்திரை"
-		}
+		name: loc("Blood pressure tablet", "ब्लड प्रेशर की गोली", "இரத்த அழுத்த மாத்திரை"),
+		dose: loc("One tablet", "एक गोली", "ஒரு மாத்திரை"),
+		time: "08:00"
 	},
 	{
 		id: "sugar",
-		time: "14:00",
-		name: {
-			en: "Sugar tablet",
-			hi: "शुगर की गोली",
-			ta: "சர்க்கரை மாத்திரை"
-		},
-		dose: {
-			en: "One tablet after food",
-			hi: "खाने के बाद एक गोली",
-			ta: "சாப்பிட்ட பிறகு ஒரு மாத்திரை"
-		}
+		name: loc("Sugar tablet", "शुगर की गोली", "சர்க்கரை மாத்திரை"),
+		dose: loc("One tablet after food", "खाने के बाद एक गोली", "சாப்பிட்ட பிறகு ஒரு மாத்திரை"),
+		time: "14:00"
 	},
 	{
 		id: "calcium",
-		time: "20:00",
-		name: {
-			en: "Calcium tablet",
-			hi: "कैल्शियम की गोली",
-			ta: "கால்சியம் மாத்திரை"
-		},
-		dose: {
-			en: "One tablet",
-			hi: "एक गोली",
-			ta: "ஒரு மாத்திரை"
-		}
+		name: loc("Calcium tablet", "कैल्शियम की गोली", "கால்சியம் மாத்திரை"),
+		dose: loc("One tablet", "एक गोली", "ஒரு மாத்திரை"),
+		time: "20:00"
 	}
 ];
 var defaultContacts = [
@@ -130,132 +387,74 @@ var defaultContacts = [
 		id: "arun",
 		name: "Arun",
 		relation: "son",
-		relationLabel: blankText,
-		phone: "98000 00121"
+		relationLabel: loc("son", "बेटा", "மகன்"),
+		phone: "98000 11111"
 	},
 	{
 		id: "meera",
 		name: "Meera",
 		relation: "daughter",
-		relationLabel: blankText,
-		phone: "98000 00456"
+		relationLabel: loc("daughter", "बेटी", "மகள்"),
+		phone: "98000 22222"
 	},
 	{
 		id: "rohan",
 		name: "Rohan",
 		relation: "grandson",
-		relationLabel: blankText,
-		phone: "98000 00789"
+		relationLabel: loc("grandson", "पोता", "பேரன்"),
+		phone: "98000 33333"
 	}
 ];
 var practicePhrases = [
 	{
-		id: "med",
-		text: {
-			en: "Remind me about my tablets",
-			hi: "मुझे मेरी दवा याद दिलाओ",
-			ta: "என் மாத்திரையை நினைவூட்டு"
-		}
-	},
-	{
-		id: "daughter",
-		text: {
-			en: "Call my daughter",
-			hi: "मेरी बेटी को कॉल करो",
-			ta: "என் மகளை அழை"
-		}
-	},
-	{
 		id: "time",
-		text: {
-			en: "What is the time?",
-			hi: "समय क्या है?",
-			ta: "இப்போது நேரம் என்ன?"
-		}
+		text: loc("What is the time?", "समय क्या है?", "இப்போது நேரம் என்ன?")
+	},
+	{
+		id: "tablets",
+		text: loc("Remind me about my tablets", "मेरी दवा याद दिलाओ", "என் மாத்திரையை நினைவூட்டு")
+	},
+	{
+		id: "son",
+		text: loc("Call my son", "बेटे को कॉल करो", "மகனை அழை")
 	},
 	{
 		id: "date",
-		text: {
-			en: "What is today's date?",
-			hi: "आज की तारीख क्या है?",
-			ta: "இன்றைய தேதி என்ன?"
-		}
+		text: loc("What is today's date?", "आज की तारीख क्या है?", "இன்றைய தேதி என்ன?")
 	},
 	{
 		id: "next",
-		text: {
-			en: "When is my next tablet?",
-			hi: "अगली गोली कब है?",
-			ta: "அடுத்த மாத்திரை எப்போது?"
-		}
+		text: loc("When is my next tablet?", "अगली गोली कब है?", "அடுத்த மாத்திரை எப்போது?")
 	},
 	{
-		id: "ramesh",
-		tricky: true,
-		text: {
-			en: "Call Ramesh",
-			hi: "रमेश को कॉल करो",
-			ta: "ரமேஷை அழை"
-		}
-	},
-	{
-		id: "two",
-		tricky: true,
-		text: {
-			en: "Should I take two tablets?",
-			hi: "क्या मैं दो गोली ले लूँ?",
-			ta: "இரண்டு மாத்திரை எடுக்கலாமா?"
-		}
-	},
-	{
-		id: "unwell",
-		text: {
-			en: "I do not feel well",
-			hi: "मेरी तबीयत ठीक नहीं है",
-			ta: "என் உடல்நிலை சரியில்லை"
-		}
+		id: "kind",
+		text: loc("Say something kind", "कोई अच्छी बात बताओ", "ஒரு நல்ல வார்த்தை சொல்")
 	},
 	{
 		id: "weather",
-		text: {
-			en: "How is the weather?",
-			hi: "मौसम कैसा है?",
-			ta: "வானிலை எப்படி உள்ளது?"
-		}
+		text: loc("How is the weather?", "मौसम कैसा है?", "வானிலை எப்படி உள்ளது?")
 	},
 	{
-		id: "who",
-		text: {
-			en: "Who are you?",
-			hi: "तुम कौन हो?",
-			ta: "நீ யார்?"
-		}
+		id: "advice",
+		text: loc("Should I take two tablets?", "क्या मैं दो गोली ले लूँ?", "இரண்டு மாத்திரை எடுக்கலாமா?"),
+		tricky: true
+	},
+	{
+		id: "unwell",
+		text: loc("I do not feel well", "तबीयत ठीक नहीं", "உடல்நிலை சரியில்லை"),
+		tricky: true
+	},
+	{
+		id: "ramesh",
+		text: loc("Call Ramesh", "रमेश को कॉल करो", "ரமேஷை அழை"),
+		tricky: true
 	},
 	{
 		id: "noise",
-		tricky: true,
-		noise: true,
-		text: {
-			en: "Too much noise around me",
-			hi: "आस-पास बहुत शोर है",
-			ta: "சுற்றி நிறைய இரைச்சல்"
-		}
+		text: loc("Too much noise around me", "आस-पास बहुत शोर है", "சுற்றி நிறைய இரைச்சல்"),
+		noise: true
 	}
 ];
-function medStatus(med, now, takenIds, snoozeUntil) {
-	if (takenIds.includes(med.id)) return "taken";
-	if (snoozeUntil && snoozeUntil > now.getTime()) return "later";
-	const [h, m] = med.time.split(":").map(Number);
-	const dueAt = (h || 0) * 60 + (m || 0);
-	return now.getHours() * 60 + now.getMinutes() >= dueAt ? "due" : "waiting";
-}
-function focusMedicine(medicines, now, takenIds, snooze) {
-	const ranked = medicines.map((med) => ({
-		med,
-		status: medStatus(med, now, takenIds, snooze[med.id])
-	}));
-	return ranked.find((item) => item.status === "due")?.med ?? ranked.find((item) => item.status === "waiting")?.med ?? ranked.find((item) => item.status === "later")?.med ?? null;
-}
 var active = null;
 function getRecognition() {
 	if (typeof window === "undefined") return null;
@@ -461,7 +660,7 @@ function findContact(text, contacts) {
 			contact.relationLabel.en,
 			contact.relationLabel.hi,
 			contact.relationLabel.ta
-		].some((label) => label.trim().length > 1 && value.includes(label.toLowerCase()));
+		].some((label) => Boolean(label && label.trim().length > 1 && value.includes(label.toLowerCase())));
 	});
 }
 function leftoverName(raw) {
@@ -1042,433 +1241,6 @@ var useMitra = create()(persist((set, get) => ({
 		snooze: state.snooze
 	})
 }));
-var copy = {
-	en: {
-		hello: "Namaste,",
-		brand: "ARIA",
-		tagline: "Your friendly voice assistant",
-		homeLine: "I am ARIA, your friendly voice assistant. Tap the big circle and speak slowly. Or press a button below.",
-		welcomeSpeak: "Namaste {name}. I am ARIA, your friendly voice assistant. How can I help you?",
-		tapSpeak: "Tap and speak",
-		listening: "I am listening",
-		speakSlowly: "Speak slowly. I am here.",
-		cancel: "Stop",
-		heard: "I heard",
-		notUnderstood: "I did not understand. Please say medicine, call, or ask the time.",
-		noisy: "I could not hear you clearly. It may be noisy. Try again somewhere quiet, or tap a button.",
-		noMic: "This phone cannot use the microphone right now. You can still tap a button. That works the same.",
-		tryAgain: "Try again",
-		orTap: "Or tap one of these",
-		medicine: "My tablets",
-		medicineSub: "Today's reminders",
-		call: "Call family",
-		callSub: "Son, daughter, grandson",
-		ask: "Ask something",
-		askSub: "Time, date, simple answers",
-		family: "Family setup",
-		backHome: "Back home",
-		back: "Back",
-		hear: "Hear this",
-		dueBanner: "Your {med} is due",
-		medIntro: "These tablets were saved by your family from the doctor's note. ARIA never changes the dose, and never gives medical advice.",
-		dueLine: "{name}, it is time for your {med}. {dose}. Did you take it?",
-		nextLine: "{name}, your next tablet is {med} at {time}. Nothing is due right now.",
-		allDoneLine: "{name}, today's tablets are all marked as taken. Well done.",
-		noMeds: "Your family has not saved any tablets yet.",
-		yesTook: "Yes, I took it",
-		remindLater: "Remind me later",
-		feelUnwell: "I do not feel well",
-		marked: "Well done, {name}. I have marked that tablet as taken.",
-		snoozed: "All right. I will remind you again in a little while.",
-		stillScheduled: "I will remind you at {time}.",
-		goOn: "All right",
-		safetyAdvice: "I cannot give medical advice. Please take only what the doctor prescribed, the way your family saved it here. If you are unsure, I can call your family.",
-		safetyUnwell: "I am sorry you feel unwell. I cannot give medical advice. If you need help, I can call your family now.",
-		callThem: "Call my family",
-		seeTablets: "See my tablets",
-		callIntro: "Who should I call? I will ask you to say yes before I call.",
-		sample: "Sample number. Not a real phone.",
-		confirmLine: "Shall I call {name}, your {relation}? I will call only if you say yes.",
-		yesCall: "Yes, call now",
-		noBack: "No, go back",
-		calling: "Calling {name}",
-		practice: "Practice call. No real phone is dialed.",
-		connected: "{name} is on the line.",
-		hangUp: "Hang up",
-		ended: "The call has ended. No real phone was used.",
-		unknownLine: "I do not have {name} saved. Your family saved {list}. Who should I call?",
-		someone: "that name",
-		askIntro: "Ask me the time, the date, or something simple. I will answer slowly.",
-		qTime: "What is the time?",
-		qDate: "What is today's date?",
-		qNext: "When is my next tablet?",
-		qWho: "Who are you?",
-		qKind: "Say something kind",
-		qWeather: "How is the weather?",
-		aTime: "The time is {time}.",
-		aDate: "Today is {date}.",
-		aWho: "I am ARIA, your friendly voice assistant. Your family set me up. I remind you about tablets, I call your family, and I answer simple questions.",
-		aKind: "You are not alone at home. Your family kept me here so you can ask for help in your own words.",
-		aWeather: "I cannot see outside. Please look through the window, or ask someone at home.",
-		aNext: "Your next tablet is {med} at {time}.",
-		aNone: "All of today's tablets are marked as taken.",
-		matched: "I understood this as: {what}",
-		intentMedicine: "a medicine reminder",
-		intentCall: "a phone call",
-		intentTime: "the time",
-		intentDate: "the date",
-		intentWeather: "the weather",
-		intentWho: "who I am",
-		intentKind: "a kind word",
-		intentNext: "your next tablet",
-		intentAdvice: "something I must not advise",
-		intentUnwell: "feeling unwell",
-		intentUnknownName: "a name I do not know",
-		intentUnknown: "unclear words",
-		intentTook: "tablet taken",
-		intentLater: "remind later",
-		intentList: "your family list",
-		familyTitle: "For the family",
-		familyLead: "Set this up once. Copy tablets from the doctor's note. ARIA will only remind. ARIA will never give medical advice.",
-		personaTitle: "Who this practice is for",
-		personaBody: "Kamala is 74. She uses the language you set here. Small phone text is hard on her eyes, and stiff fingers miss tiny buttons. She needs tablet reminders, a careful call to family, and simple answers. She does not need medical advice from an app.",
-		elderName: "Elder's name",
-		language: "Language they speak",
-		speech: "Speaking speed",
-		slow: "Slow",
-		slower: "Very slow",
-		tablets: "Tablets from the doctor's note",
-		addTablet: "Add a tablet",
-		contactsTitle: "Family to call",
-		addContact: "Add a person",
-		medName: "Tablet name",
-		dose: "Dose, in simple words",
-		timeLabel: "Time",
-		save: "Save",
-		remove: "Remove",
-		personName: "Name",
-		relation: "Who they are",
-		phone: "Sample phone number",
-		son: "son",
-		daughter: "daughter",
-		grandson: "grandson",
-		other: "other",
-		otherRelation: "Write who they are",
-		restore: "Restore the practice family",
-		restoreAsk: "Put the practice family back? The changes you made will be cleared.",
-		practiceTitle: "Try these sentences",
-		practiceLead: "Tap a sentence to see what ARIA does. Three of them are tricky on purpose.",
-		typeNote: "Write in the language your elder reads.",
-		removeAsk: "Remove this?",
-		keep: "Keep it",
-		keepOne: "Keep at least one person to call.",
-		statusDue: "Due now",
-		statusTaken: "Taken",
-		statusLater: "Later",
-		statusWaiting: "Later today",
-		tricky: "Tricky",
-		noiseCase: "Too much noise around me",
-		andWord: "and",
-		chooseEn: "Choose your language",
-		chooseHi: "अपनी भाषा चुनें",
-		chooseTa: "உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்",
-		safetyHome: "I only remind you. I do not give medical advice.",
-		ready: "Ready",
-		nameMissing: "Please type a name.",
-		doseMissing: "Please type the dose.",
-		savedOk: "Saved.",
-		clockNow: "Time now",
-		rowLine: "{time}. {med}. {dose}.",
-		langEn: "English",
-		langHi: "हिन्दी",
-		langTa: "தமிழ்"
-	},
-	hi: {
-		hello: "नमस्ते,",
-		brand: "ARIA",
-		tagline: "आपकी अपनी आवाज़ सहायक",
-		homeLine: "मैं आरिया हूँ, आपकी अपनी आवाज़ सहायक। बड़े हरे घेरे को दबाकर धीरे बोलिए। या नीचे कोई बटन दबाइए।",
-		welcomeSpeak: "नमस्ते {name} जी। मैं आरिया हूँ, आपकी अपनी आवाज़ सहायक। मैं आपकी क्या मदद करूँ?",
-		tapSpeak: "बोलने के लिए दबाएँ",
-		listening: "मैं सुन रहा हूँ",
-		speakSlowly: "धीरे बोलिए। मैं यहीं हूँ।",
-		cancel: "रुकें",
-		heard: "मैंने सुना",
-		notUnderstood: "मैं समझ नहीं पाया। दवा, कॉल, या समय बोलिए।",
-		noisy: "आवाज़ साफ नहीं मिली। शायद आस-पास शोर है। शांत जगह से फिर बोलिए, या बटन दबाइए।",
-		noMic: "इस फ़ोन पर माइक्रोफ़ोन अभी काम नहीं कर रहा। बटन दबाना भी वही काम करता है।",
-		tryAgain: "फिर से बोलें",
-		orTap: "या इनमें से एक दबाएँ",
-		medicine: "मेरी दवा",
-		medicineSub: "आज की गोलियाँ",
-		call: "परिवार को कॉल",
-		callSub: "बेटा, बेटी, पोता",
-		ask: "कुछ पूछें",
-		askSub: "समय, तारीख, आसान बात",
-		family: "परिवार की सेटिंग",
-		backHome: "घर वापस",
-		back: "पीछे",
-		hear: "यह सुनें",
-		dueBanner: "{med} बाकी है",
-		medIntro: "ये गोलियाँ आपके परिवार ने डॉक्टर की पर्ची से रखी हैं। आरिया खुराक नहीं बदलता, और इलाज की सलाह नहीं देता।",
-		dueLine: "{name} जी, आपकी {med} का समय हो गया है। {dose}। क्या आपने ले ली?",
-		nextLine: "{name} जी, अगली गोली {time} पर {med} है। अभी कोई गोली बाकी नहीं है।",
-		allDoneLine: "{name} जी, आज की सारी गोलियाँ ले ली गई हैं। बहुत अच्छा।",
-		noMeds: "आपके परिवार ने अभी कोई गोली नहीं रखी।",
-		yesTook: "हाँ, ले ली",
-		remindLater: "बाद में याद दिलाएँ",
-		feelUnwell: "तबीयत ठीक नहीं",
-		marked: "बहुत अच्छा, {name} जी। मैंने लिख लिया कि गोली ले ली।",
-		snoozed: "ठीक है। मैं थोड़ी देर बाद फिर याद दिलाऊँगा।",
-		stillScheduled: "मैं {time} पर याद दिलाऊँगा।",
-		goOn: "ठीक है",
-		safetyAdvice: "आरिया इलाज की सलाह नहीं देता। डॉक्टर ने जितनी गोली लिखी है, परिवार ने वही यहाँ रखा है। उलझन हो तो मैं परिवार को कॉल कर सकता हूँ।",
-		safetyUnwell: "तबीयत ठीक न होने का मुझे दुख है। आरिया इलाज की सलाह नहीं देता। मदद चाहिए तो मैं अभी परिवार को कॉल कर सकता हूँ।",
-		callThem: "परिवार को कॉल करें",
-		seeTablets: "मेरी गोलियाँ देखें",
-		callIntro: "किसे कॉल करूँ? कॉल से पहले मैं आपसे हाँ पूछूँगा।",
-		sample: "नमूना नंबर। असली फ़ोन नहीं।",
-		confirmLine: "क्या मैं {name}, आपके {relation} को कॉल करूँ? आप हाँ कहेंगे, तभी कॉल होगी।",
-		yesCall: "हाँ, अभी कॉल करें",
-		noBack: "नहीं, वापस जाएँ",
-		calling: "{name} को कॉल हो रही है",
-		practice: "यह अभ्यास कॉल है। असली फ़ोन नहीं लगता।",
-		connected: "{name} लाइन पर हैं।",
-		hangUp: "कॉल काटें",
-		ended: "कॉल खत्म हुई। असली फ़ोन इस्तेमाल नहीं हुआ।",
-		unknownLine: "{name} सेव नहीं है। परिवार ने {list} सेव किए हैं। किसे कॉल करूँ?",
-		someone: "यह नाम",
-		askIntro: "मुझसे समय, तारीख, या कोई आसान बात पूछिए। मैं धीरे जवाब दूँगा।",
-		qTime: "समय क्या है?",
-		qDate: "आज की तारीख क्या है?",
-		qNext: "अगली गोली कब है?",
-		qWho: "तुम कौन हो?",
-		qKind: "कोई अच्छी बात बताओ",
-		qWeather: "मौसम कैसा है?",
-		aTime: "अभी समय {time} है।",
-		aDate: "आज {date} है।",
-		aWho: "मैं आरिया हूँ, आपकी अपनी आवाज़ सहायक। आपका परिवार मुझे लगाता है। मैं दवा याद दिलाता हूँ, परिवार को कॉल करता हूँ, और आसान सवालों का जवाब देता हूँ।",
-		aKind: "आप घर पर अकेले नहीं हैं। आप अपनी बात अपने शब्दों में कह सकें, इसलिए परिवार ने मुझे रखा है।",
-		aWeather: "मैं बाहर नहीं देख सकता। खिड़की से देखिए, या घर के किसी व्यक्ति से पूछिए।",
-		aNext: "अगली गोली {time} पर {med} है।",
-		aNone: "आज की सारी गोलियाँ ले ली गई हैं।",
-		matched: "मैंने इसे ऐसा समझा: {what}",
-		intentMedicine: "दवा की याद",
-		intentCall: "फ़ोन कॉल",
-		intentTime: "समय",
-		intentDate: "तारीख",
-		intentWeather: "मौसम",
-		intentWho: "मैं कौन हूँ",
-		intentKind: "एक अच्छी बात",
-		intentNext: "अगली गोली",
-		intentAdvice: "सलाह जो मैं नहीं दे सकता",
-		intentUnwell: "तबीयत ठीक नहीं",
-		intentUnknownName: "एक नाम जो मेरे पास नहीं है",
-		intentUnknown: "अस्पष्ट बात",
-		intentTook: "गोली ले ली",
-		intentLater: "बाद में याद",
-		intentList: "परिवार की सूची",
-		familyTitle: "परिवार के लिए",
-		familyLead: "यह सेटिंग एक बार करें। गोलियाँ डॉक्टर की पर्ची से लिखें। आरिया सिर्फ याद दिलाएगा। आरिया कभी इलाज की सलाह नहीं देगा।",
-		personaTitle: "यह अभ्यास किसके लिए है",
-		personaBody: "कमला 74 साल की हैं। वे वही भाषा बोलती हैं जो आप यहाँ चुनते हैं। फ़ोन का छोटा अक्षर आँखों पर भारी है, और अकड़ी उँगलियों से छोटा बटन नहीं दबता। उन्हें दवा की याद, परिवार को सावधानी से कॉल, और आसान जवाब चाहिए। ऐप से इलाज की सलाह नहीं चाहिए।",
-		elderName: "बुज़ुर्ग का नाम",
-		language: "उनकी भाषा",
-		speech: "बोलने की गति",
-		slow: "धीमी",
-		slower: "बहुत धीमी",
-		tablets: "डॉक्टर की पर्ची की गोलियाँ",
-		addTablet: "गोली जोड़ें",
-		contactsTitle: "जिन्हें कॉल करना है",
-		addContact: "व्यक्ति जोड़ें",
-		medName: "गोली का नाम",
-		dose: "खुराक, आसान शब्दों में",
-		timeLabel: "समय",
-		save: "सेव करें",
-		remove: "हटाएँ",
-		personName: "नाम",
-		relation: "कौन हैं",
-		phone: "नमूना फ़ोन नंबर",
-		son: "बेटा",
-		daughter: "बेटी",
-		grandson: "पोता",
-		other: "अन्य",
-		otherRelation: "लिखें कौन हैं",
-		restore: "अभ्यास परिवार वापस लाएँ",
-		restoreAsk: "अभ्यास वाला परिवार फिर से रखें? आपकी बदली हुई सेटिंग मिट जाएगी।",
-		practiceTitle: "ये वाक्य आज़माएँ",
-		practiceLead: "वाक्य दबाएँ और देखें आरिया क्या करता है। तीन वाक्य जान-बूझकर मुश्किल हैं।",
-		typeNote: "उसी भाषा में लिखें जो बुज़ुर्ग पढ़ते हैं।",
-		removeAsk: "इसे हटाएँ?",
-		keep: "रहने दें",
-		keepOne: "कॉल के लिए कम से कम एक व्यक्ति रखें।",
-		statusDue: "अभी बाकी",
-		statusTaken: "ले ली",
-		statusLater: "बाद में",
-		statusWaiting: "आज बाद में",
-		tricky: "मुश्किल",
-		noiseCase: "आस-पास बहुत शोर है",
-		andWord: "और",
-		chooseEn: "Choose your language",
-		chooseHi: "अपनी भाषा चुनें",
-		chooseTa: "உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்",
-		safetyHome: "मैं सिर्फ याद दिलाता हूँ। इलाज की सलाह नहीं देता।",
-		ready: "तैयार",
-		nameMissing: "कृपया नाम लिखें।",
-		doseMissing: "कृपया खुराक लिखें।",
-		savedOk: "सेव हो गया।",
-		clockNow: "अभी समय",
-		rowLine: "{time}। {med}। {dose}।",
-		langEn: "English",
-		langHi: "हिन्दी",
-		langTa: "தமிழ்"
-	},
-	ta: {
-		hello: "வணக்கம்,",
-		brand: "ARIA",
-		tagline: "உங்கள் அன்பான குரல் உதவியாளர்",
-		homeLine: "நான் ஆரியா, உங்கள் அன்பான குரல் உதவியாளர். பச்சை வட்டத்தை அழுத்தி மெதுவாகப் பேசுங்கள். அல்லது கீழே உள்ள பொத்தானை அழுத்துங்கள்.",
-		welcomeSpeak: "வணக்கம் {name}. நான் ஆரியா, உங்கள் அன்பான குரல் உதவியாளர். நான் எப்படி உதவட்டும்?",
-		tapSpeak: "பேச அழுத்தவும்",
-		listening: "நான் கேட்கிறேன்",
-		speakSlowly: "மெதுவாகப் பேசுங்கள். நான் இங்கே இருக்கிறேன்.",
-		cancel: "நிறுத்து",
-		heard: "நான் கேட்டது",
-		notUnderstood: "எனக்குப் புரியவில்லை. மாத்திரை, அழைப்பு, அல்லது நேரம் என்று சொல்லுங்கள்.",
-		noisy: "குரல் தெளிவாக வரவில்லை. இரைச்சல் இருக்கலாம். அமைதியான இடத்தில் மீண்டும் சொல்லுங்கள், அல்லது பொத்தானை அழுத்துங்கள்.",
-		noMic: "இந்தத் தொலைபேசியில் ஒலிவாங்கி இப்போது வேலை செய்யவில்லை. பொத்தானை அழுத்தினாலும் அதே உதவி கிடைக்கும்.",
-		tryAgain: "மீண்டும் சொல்லுங்கள்",
-		orTap: "அல்லது இவற்றில் ஒன்றை அழுத்தவும்",
-		medicine: "என் மாத்திரை",
-		medicineSub: "இன்றைய மாத்திரைகள்",
-		call: "குடும்ப அழைப்பு",
-		callSub: "மகன், மகள், பேரன்",
-		ask: "கேளுங்கள்",
-		askSub: "நேரம், தேதி, எளிய பதில்",
-		family: "குடும்ப அமைப்பு",
-		backHome: "வீட்டுக்குத் திரும்பு",
-		back: "பின்னால்",
-		hear: "இதைக் கேள்",
-		dueBanner: "{med} காத்திருக்கிறது",
-		medIntro: "இந்த மாத்திரைகளை உங்கள் குடும்பம் மருத்துவர் சீட்டிலிருந்து சேமித்தது. ஆரியா அளவை மாற்றாது. மருத்துவ ஆலோசனையும் தராது.",
-		dueLine: "{name}, உங்கள் {med} நேரம் ஆகிவிட்டது. {dose}. எடுத்துவிட்டீர்களா?",
-		nextLine: "{name}, அடுத்த மாத்திரை {time}க்கு {med}. இப்போது எதுவும் நிலுவையில் இல்லை.",
-		allDoneLine: "{name}, இன்றைய மாத்திரைகள் எல்லாம் எடுத்துவிட்டதாக குறிக்கப்பட்டுள்ளது. நன்று.",
-		noMeds: "உங்கள் குடும்பம் இன்னும் மாத்திரைகளைச் சேமிக்கவில்லை.",
-		yesTook: "ஆம், எடுத்துவிட்டேன்",
-		remindLater: "பிறகு நினைவூட்டு",
-		feelUnwell: "உடல்நிலை சரியில்லை",
-		marked: "நன்று, {name}. மாத்திரை எடுத்துவிட்டீர்கள் என்று குறித்துவிட்டேன்.",
-		snoozed: "சரி. கொஞ்ச நேரம் கழித்து மீண்டும் நினைவூட்டுவேன்.",
-		stillScheduled: "{time}க்கு நினைவூட்டுவேன்.",
-		goOn: "சரி",
-		safetyAdvice: "ஆரியா மருத்துவ ஆலோசனை தராது. மருத்துவர் எழுதிய மாத்திரையை மட்டும் குடும்பம் இங்கே சேமித்துள்ளது. சந்தேகம் இருந்தால் குடும்பத்தை அழைக்கலாம்.",
-		safetyUnwell: "உடல்நிலை சரியில்லை என்பது வருத்தமாக உள்ளது. ஆரியா மருத்துவ ஆலோசனை தராது. உதவி வேண்டும் என்றால் இப்போதே குடும்பத்தை அழைக்கலாம்.",
-		callThem: "குடும்பத்தை அழை",
-		seeTablets: "என் மாத்திரைகளைப் பார்",
-		callIntro: "யாரை அழைக்கட்டும்? அழைப்பதற்கு முன் ஆம் என்று கேட்பேன்.",
-		sample: "மாதிரி எண். உண்மையான தொலைபேசி அல்ல.",
-		confirmLine: "உங்கள் {relation} {name} அவர்களை அழைக்கட்டுமா? நீங்கள் ஆம் என்றால் மட்டுமே அழைப்பேன்.",
-		yesCall: "ஆம், இப்போது அழை",
-		noBack: "வேண்டாம், திரும்பு",
-		calling: "{name} அழைக்கப்படுகிறார்",
-		practice: "இது பயிற்சி அழைப்பு. உண்மையான தொலைபேசி இணைக்கப்படவில்லை.",
-		connected: "{name} அழைப்பில் இருக்கிறார்.",
-		hangUp: "துண்டி",
-		ended: "அழைப்பு முடிந்தது. உண்மையான தொலைபேசி பயன்படுத்தப்படவில்லை.",
-		unknownLine: "{name} சேமிக்கப்படவில்லை. குடும்பம் {list} என்று சேமித்துள்ளது. யாரை அழைக்கட்டும்?",
-		someone: "அந்தப் பெயர்",
-		askIntro: "நேரம், தேதி, அல்லது எளிய ஒன்றைக் கேளுங்கள். நான் மெதுவாகப் பதில் சொல்வேன்.",
-		qTime: "இப்போது நேரம் என்ன?",
-		qDate: "இன்றைய தேதி என்ன?",
-		qNext: "அடுத்த மாத்திரை எப்போது?",
-		qWho: "நீ யார்?",
-		qKind: "ஒரு நல்ல வார்த்தை சொல்",
-		qWeather: "வானிலை எப்படி உள்ளது?",
-		aTime: "இப்போது நேரம் {time}.",
-		aDate: "இன்று {date}.",
-		aWho: "நான் ஆரியா, உங்கள் அன்பான குரல் உதவியாளர். உங்கள் குடும்பம் என்னை அமைத்தது. மாத்திரை நினைவூட்டுவேன், குடும்பத்தை அழைப்பேன், எளிய கேள்விகளுக்குப் பதில் சொல்வேன்.",
-		aKind: "நீங்கள் வீட்டில் தனியாக இல்லை. உங்கள் சொந்த வார்த்தையில் உதவி கேட்க, குடும்பம் என்னை இங்கே வைத்துள்ளது.",
-		aWeather: "என்னால் வெளியே பார்க்க முடியாது. ஜன்னல் வழியாகப் பாருங்கள், அல்லது வீட்டில் உள்ளவரிடம் கேளுங்கள்.",
-		aNext: "அடுத்த மாத்திரை {time}க்கு {med}.",
-		aNone: "இன்றைய மாத்திரைகள் எல்லாம் எடுத்துவிட்டதாக குறிக்கப்பட்டுள்ளது.",
-		matched: "நான் இதை இப்படிப் புரிந்துகொண்டேன்: {what}",
-		intentMedicine: "மாத்திரை நினைவூட்டல்",
-		intentCall: "தொலைபேசி அழைப்பு",
-		intentTime: "நேரம்",
-		intentDate: "தேதி",
-		intentWeather: "வானிலை",
-		intentWho: "நான் யார்",
-		intentKind: "ஒரு நல்ல வார்த்தை",
-		intentNext: "அடுத்த மாத்திரை",
-		intentAdvice: "நான் தரக்கூடாத ஆலோசனை",
-		intentUnwell: "உடல்நிலை சரியில்லை",
-		intentUnknownName: "எனக்குத் தெரியாத பெயர்",
-		intentUnknown: "தெளிவற்ற சொற்கள்",
-		intentTook: "மாத்திரை எடுத்தது",
-		intentLater: "பிறகு நினைவூட்டல்",
-		intentList: "குடும்பப் பட்டியல்",
-		familyTitle: "குடும்பத்திற்காக",
-		familyLead: "இதை ஒரு முறை அமையுங்கள். மாத்திரைகளை மருத்துவர் சீட்டிலிருந்து எழுதுங்கள். ஆரியா நினைவூட்ட மட்டுமே செய்யும். மருத்துவ ஆலோசனை ஒருபோதும் தராது.",
-		personaTitle: "இந்தப் பயிற்சி யாருக்காக",
-		personaBody: "கமலாவுக்கு 74 வயது. நீங்கள் இங்கே அமைக்கும் மொழியைப் பேசுவார். சிறிய எழுத்து கண்களுக்குக் கடினம். விறைத்த விரல்களால் சிறிய பொத்தானை அழுத்த முடியாது. மாத்திரை நினைவூட்டல், உறுதிசெய்த குடும்ப அழைப்பு, எளிய பதில்கள் வேண்டும். செயலியிடமிருந்து மருத்துவ ஆலோசனை வேண்டாம்.",
-		elderName: "மூத்தவரின் பெயர்",
-		language: "அவர்கள் பேசும் மொழி",
-		speech: "பேசும் வேகம்",
-		slow: "மெதுவாக",
-		slower: "மிக மெதுவாக",
-		tablets: "மருத்துவர் சீட்டின் மாத்திரைகள்",
-		addTablet: "மாத்திரை சேர்",
-		contactsTitle: "அழைக்க வேண்டியவர்கள்",
-		addContact: "ஒருவரைச் சேர்",
-		medName: "மாத்திரையின் பெயர்",
-		dose: "அளவு, எளிய சொற்களில்",
-		timeLabel: "நேரம்",
-		save: "சேமி",
-		remove: "நீக்கு",
-		personName: "பெயர்",
-		relation: "யார்",
-		phone: "மாதிரி தொலைபேசி எண்",
-		son: "மகன்",
-		daughter: "மகள்",
-		grandson: "பேரன்",
-		other: "மற்றவர்",
-		otherRelation: "யார் என்று எழுதுங்கள்",
-		restore: "பயிற்சி குடும்பத்தை மீட்டமை",
-		restoreAsk: "பயிற்சி குடும்பத்தைத் திரும்ப வைக்கவா? நீங்கள் மாற்றிய அமைப்பு அழியும்.",
-		practiceTitle: "இந்த வாக்கியங்களை முயற்சி செய்யுங்கள்",
-		practiceLead: "ஒரு வாக்கியத்தை அழுத்தி ஆரியா என்ன செய்கிறது என்று பாருங்கள். மூன்று வாக்கியங்கள் வேண்டுமென்றே கடினமானவை.",
-		typeNote: "மூத்தவர் படிக்கும் மொழியில் எழுதுங்கள்.",
-		removeAsk: "இதை நீக்கவா?",
-		keep: "வைத்திரு",
-		keepOne: "அழைக்க குறைந்தது ஒருவரை வையுங்கள்.",
-		statusDue: "இப்போது நிலுவை",
-		statusTaken: "எடுத்துவிட்டது",
-		statusLater: "பிறகு",
-		statusWaiting: "இன்று பின்னர்",
-		tricky: "கடினம்",
-		noiseCase: "சுற்றி நிறைய இரைச்சல்",
-		andWord: "மற்றும்",
-		chooseEn: "Choose your language",
-		chooseHi: "अपनी भाषा चुनें",
-		chooseTa: "உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்",
-		safetyHome: "நான் நினைவூட்டுவேன் மட்டும். மருத்துவ ஆலோசனை தரமாட்டேன்.",
-		ready: "தயார்",
-		nameMissing: "தயவுசெய்து பெயரை எழுதுங்கள்.",
-		doseMissing: "தயவுசெய்து அளவை எழுதுங்கள்.",
-		savedOk: "சேமிக்கப்பட்டது.",
-		clockNow: "இப்போதைய நேரம்",
-		rowLine: "{time}. {med}. {dose}.",
-		langEn: "English",
-		langHi: "हिन्दी",
-		langTa: "தமிழ்"
-	}
-};
-function t(lang, key, vars) {
-	let text = copy[lang][key] ?? copy.en[key];
-	if (vars) for (const [name, value] of Object.entries(vars)) text = text.replaceAll(`{${name}}`, value);
-	return text;
-}
 function Shell({ children }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
 		className: "mx-auto flex min-h-dvh w-full max-w-xl flex-col overflow-x-hidden px-5 py-6",
@@ -1613,37 +1385,34 @@ function Understood() {
 		]
 	});
 }
-var languageOrder = [
-	"en",
-	"hi",
-	"ta"
-];
-var languageKey = {
-	en: "langEn",
-	hi: "langHi",
-	ta: "langTa"
-};
 function LangSwitch({ speakOnChange = false }) {
 	const lang = useMitra((state) => state.lang);
 	const setLang = useMitra((state) => state.setLang);
 	const name = useMitra((state) => state.seniorName);
 	const rate = useMitra((state) => state.rate);
+	const [busy, setBusy] = (0, import_react.useState)(null);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		className: "grid grid-cols-3 gap-2",
+		className: "-mx-1 flex gap-2 overflow-x-auto overscroll-contain px-1 pb-1",
 		role: "group",
 		"aria-label": t(lang, "language"),
-		children: languageOrder.map((code) => {
-			const selected = code === lang;
+		children: LANGUAGES.map((option) => {
+			const selected = option.code === lang;
 			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 				type: "button",
 				"aria-pressed": selected,
+				disabled: busy !== null && busy !== option.code,
 				onClick: () => {
-					setLang(code);
-					if (speakOnChange) speak(t(code, "welcomeSpeak", { name }), code, rate);
+					if (option.code === lang || busy) return;
+					setBusy(option.code);
+					ensureLang(option.code).then(() => {
+						setLang(option.code);
+						setBusy(null);
+						if (speakOnChange) speak(t(option.code, "welcomeSpeak", { name }), option.code, rate);
+					});
 				},
-				className: `min-h-12 rounded-2xl px-2 text-lg font-semibold ${selected ? "bg-forest text-paper" : "border border-line bg-card text-ink"}`,
-				children: t(code, languageKey[code])
-			}, code);
+				className: `min-h-14 shrink-0 rounded-full px-4 text-lg font-semibold ${selected ? "bg-forest text-paper" : "border border-line bg-card text-ink"}`,
+				children: busy === option.code ? "…" : option.native
+			}, option.code);
 		})
 	});
 }
@@ -1687,54 +1456,69 @@ function LanguageScreen() {
 	const chooseLang = useMitra((state) => state.chooseLang);
 	const name = useMitra((state) => state.seniorName);
 	const rate = useMitra((state) => state.rate);
+	const [busy, setBusy] = (0, import_react.useState)(null);
+	(0, import_react.useEffect)(() => {
+		preloadPickerFonts();
+		const id = window.setTimeout(() => prefetchLangs(), 250);
+		return () => window.clearTimeout(id);
+	}, []);
+	async function pick(code) {
+		if (busy) return;
+		setBusy(code);
+		noteLangChoice(code);
+		try {
+			await ensureLang(code);
+			chooseLang(code);
+			speak(t(code, "welcomeSpeak", { name }), code, rate);
+		} catch {
+			setBusy(null);
+		}
+	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		className: "flex flex-1 flex-col justify-center gap-8",
+		className: "flex min-h-0 flex-1 flex-col gap-5",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "flex flex-col items-center gap-3 text-center",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mark, {
-					badge: true,
-					className: "size-24"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					className: "text-5xl font-semibold tracking-tight text-forest",
-					children: "ARIA"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					className: "mt-2 text-xl font-medium text-muted",
-					children: "Your friendly voice assistant"
-				})] })]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "space-y-1 text-center text-xl leading-snug",
+				className: "flex shrink-0 flex-col items-center gap-2 text-center",
 				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Choose your language" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "अपनी भाषा चुनें" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்" })
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mark, {
+						badge: true,
+						className: "size-16"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+						className: "text-4xl font-semibold tracking-tight text-forest",
+						children: "ARIA"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "text-lg font-medium text-muted",
+						children: "Your friendly voice assistant"
+					})
 				]
 			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "shrink-0 text-center text-xl font-semibold",
+				children: "Choose your language"
+			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "flex flex-col gap-3",
-				children: [
-					{
-						code: "en",
-						label: "English"
-					},
-					{
-						code: "hi",
-						label: "हिन्दी"
-					},
-					{
-						code: "ta",
-						label: "தமிழ்"
-					}
-				].map((option) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+				className: "min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain pb-2",
+				children: LANGUAGES.map((option) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 					type: "button",
-					onClick: () => {
-						noteLangChoice(option.code);
-						chooseLang(option.code);
-						speak(t(option.code, "welcomeSpeak", { name }), option.code, rate);
-					},
-					className: "flex min-h-24 w-full items-center justify-center rounded-3xl border border-line bg-card text-4xl font-semibold text-ink transition-transform active:scale-[0.99] motion-reduce:transform-none",
-					children: option.label
+					disabled: busy !== null,
+					onClick: () => void pick(option.code),
+					className: "flex min-h-20 w-full items-center justify-between gap-3 rounded-3xl border border-line bg-card px-5 text-left disabled:opacity-70",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+						className: "min-w-0",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "block text-3xl leading-tight font-semibold",
+							children: option.native
+						}), option.code === "en" ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "block text-lg text-muted",
+							children: option.english
+						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "text-2xl font-semibold text-forest",
+						"aria-hidden": "true",
+						children: busy === option.code ? "…" : ""
+					})]
 				}, option.code))
 			})
 		]
@@ -2929,7 +2713,9 @@ function MitraApp() {
 	const welcomed = useMitra((state) => state.welcomed);
 	const view = useMitra((state) => state.view);
 	const lang = useMitra((state) => state.lang);
+	const [copyReady, setCopyReady] = (0, import_react.useState)(() => hasLang(lang));
 	(0, import_react.useEffect)(() => {
+		preloadPickerFonts();
 		warmVoices();
 		const finish = () => {
 			const chosen = takePendingLang();
@@ -2942,9 +2728,24 @@ function MitraApp() {
 		};
 	}, []);
 	(0, import_react.useEffect)(() => {
-		document.documentElement.lang = lang === "hi" ? "hi" : lang === "ta" ? "ta" : "en";
+		let live = true;
+		setCopyReady(hasLang(lang));
+		ensureLang(lang).then(() => {
+			if (live) setCopyReady(true);
+		});
+		return () => {
+			live = false;
+		};
+	}, [lang]);
+	(0, import_react.useEffect)(() => {
+		document.documentElement.lang = localeOf(lang);
+		document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
 	}, [lang]);
 	const screen = !welcomed ? "language" : view;
+	if (welcomed && !copyReady) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Shell, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "flex flex-1 items-center justify-center text-2xl font-semibold text-forest",
+		children: "ARIA"
+	}) });
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Shell, { children: [
 		screen === "language" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LanguageScreen, {}) : null,
 		screen === "home" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HomeScreen, {}) : null,

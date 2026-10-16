@@ -8,7 +8,7 @@
   --color-line: #e0d3c4;
   --color-forest: #1b4332;
   --color-clay: #7c2d12;
-  --font-sans: "Hind", "Noto Sans Tamil", "Nirmala UI", sans-serif;
+  --font-sans: "Hind", "Noto Sans Bengali", "Noto Sans Telugu", "Noto Sans Tamil", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Oriya", "Noto Naskh Arabic", "Nirmala UI", sans-serif;
 }
 
 @layer base {
