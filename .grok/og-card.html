@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>ARIA</title>
+<style>
+  @font-face {
+    font-family: "Hind";
+    src: url("./fonts/Hind-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Hind";
+    src: url("./fonts/Hind-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+  html, body {
+    margin: 0;
+    width: 1200px;
+    height: 630px;
+    background: #F3EBDD;
+    overflow: hidden;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lockup {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+  }
+  .tile {
+    width: 236px;
+    height: 236px;
+    flex: none;
+    display: block;
+  }
+  .copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  h1 {
+    margin: 0;
+    padding: 0;
+    font-family: Hind, sans-serif;
+    font-weight: 700;
+    font-size: 148px;
+    line-height: 0.86;
+    letter-spacing: 0.02em;
+    color: #1B4332;
+  }
+  p {
+    margin: 0;
+    padding: 0;
+    font-family: Hind, sans-serif;
+    font-weight: 500;
+    font-size: 46px;
+    line-height: 1.05;
+    letter-spacing: 0.004em;
+    color: #1A120C;
+  }
+</style>
+</head>
+<body>
+  <div class="lockup">
+    <svg class="tile" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true">
+      <rect width="32" height="32" rx="8" fill="#1B4332"/>
+      <path d="M8 25.8 16 6.6 24 25.8" fill="none" stroke="#F3EBDD" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11.3 18.8c1.5-2.2 3.05-3.2 4.7-3.2s3.2 1 4.7 3.2" fill="none" stroke="#F0B48A" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+    <div class="copy">
+      <h1>ARIA</h1>
+      <p>Your friendly voice assistant</p>
+    </div>
+  </div>
+</body>
+</html>

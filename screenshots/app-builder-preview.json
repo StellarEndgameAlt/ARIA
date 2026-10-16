@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "ARIA",
+      "hasCanvas": false,
+      "bodyTextLen": 126,
+      "bodyTextHash": "bc9e908b44c29dfbc02fa322670fd20a65c04201c82a0e0e365e2db1ce8f7a53",
+      "bodyTextPrefix": "ARIA Your friendly voice assistant Choose your language अपनी भाष",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "ARIA",
+      "hasCanvas": false,
+      "bodyTextLen": 126,
+      "bodyTextHash": "bc9e908b44c29dfbc02fa322670fd20a65c04201c82a0e0e365e2db1ce8f7a53",
+      "bodyTextPrefix": "ARIA Your friendly voice assistant Choose your language अपनी भाष",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}
