@@ -10,8 +10,9 @@ import {
   focusMedicine,
   medStatus,
   todayKey,
+  withReminder,
 } from "@/lib/mitra/data";
-import { type Intent, parseUtterance } from "@/lib/mitra/intents";
+import { type Intent, extractTime, parseUtterance } from "@/lib/mitra/intents";
 import { stopListening, stopSpeak } from "@/lib/mitra/speech";
 
 export type View =
@@ -24,9 +25,13 @@ export type View =
   | "ask"
   | "safety"
   | "fallback"
-  | "family";
+  | "family"
+  | "about"
+  | "languages";
 
-export type AskKind = "time" | "date" | "weather" | "who" | "kind" | "next";
+export type Role = "senior" | "parent" | "student";
+
+export type AskKind = "time" | "date" | "weather" | "who" | "kind" | "next" | "hello" | "needTime" | "remindSet";
 export type SafetyKind = "advice" | "unwell";
 export type FallbackKind = "unknown" | "noise" | "nomic" | "name";
 export type BannerKind = "marked" | "snoozed" | "scheduled";
@@ -49,6 +54,8 @@ type Memory = {
   welcomed: boolean;
   lang: Lang;
   seniorName: string;
+  role: Role;
+  birth: string;
   rate: number;
   medicines: Medicine[];
   contacts: Contact[];
@@ -62,6 +69,7 @@ type Memory = {
   safety: SafetyKind | null;
   fallback: FallbackKind | null;
   unknownName: string;
+  reminderTime: string | null;
   banner: BannerKind | null;
 };
 
@@ -70,6 +78,8 @@ type Actions = {
   setLang: (lang: Lang) => void;
   setRate: (rate: number) => void;
   setSeniorName: (name: string) => void;
+  setRole: (role: Role) => void;
+  setBirth: (birth: string) => void;
   setView: (view: View) => void;
   submit: (raw: string) => void;
   fail: (reason: "noise" | "nomic") => void;
@@ -78,7 +88,10 @@ type Actions = {
   openMedicine: () => void;
   openCall: () => void;
   openAsk: () => void;
+  openWeather: () => void;
   openFamily: () => void;
+  openAbout: () => void;
+  openLanguages: () => void;
   openConfirm: (contactId: string) => void;
   startCall: () => void;
   backToCall: () => void;
@@ -104,6 +117,7 @@ const cleared = {
   safety: null as SafetyKind | null,
   fallback: null as FallbackKind | null,
   unknownName: "",
+  reminderTime: null as string | null,
 };
 
 function memoryStorage() {
@@ -120,6 +134,8 @@ export const useMitra = create<Memory & Actions>()(
       welcomed: false,
       lang: "en",
       seniorName: "Kamala",
+      role: "senior",
+      birth: "",
       rate: 0.85,
       medicines: defaultMedicines,
       contacts: defaultContacts,
@@ -133,12 +149,18 @@ export const useMitra = create<Memory & Actions>()(
       safety: null,
       fallback: null,
       unknownName: "",
+      reminderTime: null,
       banner: null,
 
       chooseLang: (lang) => set({ lang, welcomed: true, view: "home", ...cleared }),
       setLang: (lang) => set({ lang }),
       setRate: (rate) => set({ rate }),
       setSeniorName: (name) => set({ seniorName: name.trim() || get().seniorName }),
+      setRole: (role) => set({ role }),
+      setBirth: (birth) => {
+        if (birth !== "" && !/^\d{4}-\d{2}-\d{2}$/.test(birth)) return;
+        set({ birth });
+      },
       setView: (view) => set({ view }),
 
       submit: (raw) => {
@@ -157,6 +179,22 @@ export const useMitra = create<Memory & Actions>()(
           }
           if (intent.type === "no") {
             set({ heard, intent, view: "call", contactId: null, banner: null });
+            return;
+          }
+        }
+
+        if (state.ask === "needTime") {
+          const clock = extractTime(heard);
+          if (clock) {
+            set({
+              medicines: withReminder(state.medicines, clock),
+              heard,
+              intent: { type: "remind_set", time: clock },
+              view: "ask",
+              ask: "remindSet",
+              reminderTime: clock,
+              banner: null,
+            });
             return;
           }
         }
@@ -191,6 +229,26 @@ export const useMitra = create<Memory & Actions>()(
               unknownName: intent.name,
               banner: null,
             });
+            return;
+          case "hello":
+            set({ heard, intent, view: "ask", ask: "hello", banner: null });
+            return;
+          case "need_time":
+            set({ heard, intent, view: "ask", ask: "needTime", reminderTime: null, banner: null });
+            return;
+          case "remind_set":
+            set({
+              medicines: withReminder(state.medicines, intent.time),
+              heard,
+              intent,
+              view: "ask",
+              ask: "remindSet",
+              reminderTime: intent.time,
+              banner: null,
+            });
+            return;
+          case "noise":
+            set({ heard, intent, view: "fallback", fallback: "noise", banner: null });
             return;
           case "time":
           case "date":
@@ -246,9 +304,24 @@ export const useMitra = create<Memory & Actions>()(
         set({ view: "ask", ...cleared });
       },
 
+      openWeather: () => {
+        stopSpeak();
+        set({ view: "ask", ...cleared, ask: "weather", intent: { type: "weather" } });
+      },
+
       openFamily: () => {
         stopSpeak();
         set({ view: "family", contactId: null, ...cleared });
+      },
+
+      openAbout: () => {
+        stopSpeak();
+        set({ view: "about", contactId: null, ...cleared });
+      },
+
+      openLanguages: () => {
+        stopSpeak();
+        set({ view: "languages", contactId: null, ...cleared });
       },
 
       openConfirm: (contactId) => {
@@ -372,6 +445,8 @@ export const useMitra = create<Memory & Actions>()(
         welcomed: state.welcomed,
         lang: state.lang,
         seniorName: state.seniorName,
+        role: state.role,
+        birth: state.birth,
         rate: state.rate,
         medicines: state.medicines,
         contacts: state.contacts,

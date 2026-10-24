@@ -1,5 +1,5 @@
 import { i as __toESM } from "../_runtime.mjs";
-import { K as require_react } from "./@tanstack/react-router+[...].mjs";
+import { q as require_react } from "./@tanstack/react-router+[...].mjs";
 //#region node_modules/lucide-react/dist/esm/shared/src/utils.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 /**
@@ -89,6 +89,48 @@ var ArrowLeft = createLucideIcon("arrow-left", [["path", {
 	d: "M19 12H5",
 	key: "x3x0zl"
 }]]);
+/**
+* @license lucide-react v0.510.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var Check = createLucideIcon("check", [["path", {
+	d: "M20 6 9 17l-5-5",
+	key: "1gmf2c"
+}]]);
+/**
+* @license lucide-react v0.510.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var CloudSun = createLucideIcon("cloud-sun", [
+	["path", {
+		d: "M12 2v2",
+		key: "tus03m"
+	}],
+	["path", {
+		d: "m4.93 4.93 1.41 1.41",
+		key: "149t6j"
+	}],
+	["path", {
+		d: "M20 12h2",
+		key: "1q8mjw"
+	}],
+	["path", {
+		d: "m19.07 4.93-1.41 1.41",
+		key: "1shlcs"
+	}],
+	["path", {
+		d: "M15.947 12.65a4 4 0 0 0-5.925-4.128",
+		key: "dpwdj0"
+	}],
+	["path", {
+		d: "M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z",
+		key: "s09mg5"
+	}]
+]);
 /**
 * @license lucide-react v0.510.0 - ISC
 *
@@ -204,6 +246,21 @@ var TriangleAlert = createLucideIcon("triangle-alert", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var UserRound = createLucideIcon("user-round", [["circle", {
+	cx: "12",
+	cy: "8",
+	r: "5",
+	key: "1hypcn"
+}], ["path", {
+	d: "M20 21a8 8 0 0 0-16 0",
+	key: "rfgkzh"
+}]]);
+/**
+* @license lucide-react v0.510.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var Volume2 = createLucideIcon("volume-2", [
 	["path", {
 		d: "M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z",
@@ -219,4 +276,4 @@ var Volume2 = createLucideIcon("volume-2", [
 	}]
 ]);
 //#endregion
-export { Phone as a, MessageCircle as c, Pill as i, ArrowLeft as l, TriangleAlert as n, PhoneOff as o, Plus as r, Mic as s, Volume2 as t };
+export { Pill as a, Mic as c, Check as d, ArrowLeft as f, Plus as i, MessageCircle as l, UserRound as n, Phone as o, TriangleAlert as r, PhoneOff as s, Volume2 as t, CloudSun as u };

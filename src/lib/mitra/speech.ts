@@ -1,5 +1,6 @@
 import type { Lang } from "./data";
 import { localeOf } from "./data";
+import { speakLine } from "./tts";
 
 type RecResult = {
   results: ArrayLike<ArrayLike<{ transcript: string }>>;
@@ -22,6 +23,26 @@ type Rec = {
 type Session = { settled: boolean; rec: Rec | null };
 
 let active: Session | null = null;
+let ticket = 0;
+let player: HTMLAudioElement | null = null;
+const clips = new Map<string, string>();
+
+function clipUrl(audio: string): string {
+  const binary = atob(audio);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" }));
+}
+
+function systemSpeak(text: string, lang: Lang, rate: number, voice: SpeechSynthesisVoice | null): void {
+  if (typeof window === "undefined" || !window.speechSynthesis) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = localeOf(lang);
+  utterance.rate = rate;
+  utterance.pitch = 1;
+  if (voice) utterance.voice = voice;
+  window.speechSynthesis.speak(utterance);
+}
 
 function getRecognition(): (new () => Rec) | null {
   if (typeof window === "undefined") return null;
@@ -45,20 +66,58 @@ function pickVoice(lang: Lang): SpeechSynthesisVoice | null {
 }
 
 export function speak(text: string, lang: Lang, rate: number): void {
-  if (typeof window === "undefined" || !window.speechSynthesis || !text.trim()) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = localeOf(lang);
-  utterance.rate = rate;
-  utterance.pitch = 1;
-  const voice = pickVoice(lang);
-  if (voice) utterance.voice = voice;
-  window.speechSynthesis.speak(utterance);
+  if (typeof window === "undefined" || !text.trim()) return;
+  stopSpeak();
+  const mine = ticket;
+  if (lang === "en") {
+    systemSpeak(text, lang, rate, pickVoice(lang));
+    return;
+  }
+  const key = `${lang}\n${text}`;
+  const cached = clips.get(key);
+  const play = (url: string) => {
+    if (mine !== ticket) return;
+    const audio = new Audio(url);
+    audio.playbackRate = Math.min(1, Math.max(0.65, rate));
+    player = audio;
+    void audio.play().catch(() => {
+      if (mine === ticket) systemSpeak(text, lang, rate, null);
+    });
+  };
+  if (cached) {
+    play(cached);
+    return;
+  }
+  void speakLine({ data: { text, lang } })
+    .then((result) => {
+      if (!result.ok) {
+        if (mine === ticket) systemSpeak(text, lang, rate, null);
+        return;
+      }
+      const url = clipUrl(result.audio);
+      if (clips.size > 24) {
+        const first = clips.keys().next().value;
+        if (first) {
+          URL.revokeObjectURL(clips.get(first) ?? "");
+          clips.delete(first);
+        }
+      }
+      clips.set(key, url);
+      play(url);
+    })
+    .catch(() => {
+      if (mine === ticket) systemSpeak(text, lang, rate, null);
+    });
 }
 
 export function stopSpeak(): void {
-  if (typeof window === "undefined" || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
+  ticket += 1;
+  if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
+  if (player) {
+    player.pause();
+    player.src = "";
+    player = null;
+  }
 }
 
 export function warmVoices(): void {

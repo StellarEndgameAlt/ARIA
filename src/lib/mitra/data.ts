@@ -116,6 +116,23 @@ export function relationForCall(contact: Contact, lang: Lang): string {
   return t(lang, contact.relation);
 }
 
+export function withReminder(medicines: Medicine[], time: string): Medicine[] {
+  if (medicines.some((med) => med.time === time)) return medicines;
+  if (medicines.length === 0) {
+    return [
+      {
+        id: "reminder",
+        name: loc("Medicine", "दवाई", "மருந்து"),
+        dose: loc("One tablet", "एक गोली", "ஒரு மாத்திரை"),
+        time,
+      },
+    ];
+  }
+  const ordered = [...medicines].sort((a, b) => a.time.localeCompare(b.time));
+  const [first, ...rest] = ordered;
+  return [{ ...first, time }, ...rest].sort((a, b) => a.time.localeCompare(b.time));
+}
+
 export const defaultMedicines: Medicine[] = [
   {
     id: "bp",
@@ -139,8 +156,8 @@ export const defaultMedicines: Medicine[] = [
 
 export const defaultContacts: Contact[] = [
   {
-    id: "arun",
-    name: "Arun",
+    id: "rahul",
+    name: "Rahul",
     relation: "son",
     relationLabel: loc("son", "बेटा", "மகன்"),
     phone: "98000 11111",
@@ -153,8 +170,8 @@ export const defaultContacts: Contact[] = [
     phone: "98000 22222",
   },
   {
-    id: "rohan",
-    name: "Rohan",
+    id: "dev",
+    name: "Dev",
     relation: "grandson",
     relationLabel: loc("grandson", "पोता", "பேரன்"),
     phone: "98000 33333",
@@ -163,8 +180,10 @@ export const defaultContacts: Contact[] = [
 
 export const practicePhrases: PracticePhrase[] = [
   { id: "time", text: loc("What is the time?", "समय क्या है?", "இப்போது நேரம் என்ன?") },
-  { id: "tablets", text: loc("Remind me about my tablets", "मेरी दवा याद दिलाओ", "என் மாத்திரையை நினைவூட்டு") },
-  { id: "son", text: loc("Call my son", "बेटे को कॉल करो", "மகனை அழை") },
+  { id: "tablets", text: loc("Remind me to take my tablets", "मेरी गोलियाँ याद दिलाओ", "என் மாத்திரையை நினைவூட்டு") },
+  { id: "son", text: loc("Call my son Rahul", "राहुल बेटे को कॉल करो", "ராகுல் மகனை அழை") },
+  { id: "eight", text: loc("Remind me to take my medicine at 8 AM", "सुबह 8 बजे दवा याद दिलाओ", "காலை 8 மணிக்கு மருந்து நினைவூட்டு") },
+  { id: "hear", text: loc("Hello, can you hear me?", "हैलो, क्या आप मुझे सुन रहे हैं?", "வணக்கம், என்னைக் கேட்கிறீர்களா?") },
   { id: "date", text: loc("What is today's date?", "आज की तारीख क्या है?", "இன்றைய தேதி என்ன?") },
   { id: "next", text: loc("When is my next tablet?", "अगली गोली कब है?", "அடுத்த மாத்திரை எப்போது?") },
   { id: "kind", text: loc("Say something kind", "कोई अच्छी बात बताओ", "ஒரு நல்ல வார்த்தை சொல்") },
@@ -181,7 +200,7 @@ export const practicePhrases: PracticePhrase[] = [
   },
   {
     id: "ramesh",
-    text: loc("Call Ramesh", "रमेश को कॉल करो", "ரமேஷை அழை"),
+    text: loc("Call Rohan", "रोहन को कॉल करो", "ரோஹனை அழை"),
     tricky: true,
   },
   {

@@ -1,16 +1,18 @@
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowLeft, Volume2 } from "lucide-react";
-import type { Lang } from "@/lib/mitra/data";
-import { ensureLang, t } from "@/lib/mitra/i18n";
+import { t } from "@/lib/mitra/i18n";
 import { intentKey } from "@/lib/mitra/intents";
-import { LANGUAGES } from "@/lib/mitra/languages";
 import { speak } from "@/lib/mitra/speech";
 import { useMitra } from "@/lib/mitra/store";
 
 export function Shell({ children }: { children: ReactNode }) {
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col overflow-x-hidden px-5 py-6">{children}</main>
+    <main className="mx-auto h-dvh max-h-dvh w-full max-w-xl overflow-hidden">
+      <div className="h-full overflow-y-auto overscroll-y-contain">
+        <div className="flex min-h-full flex-col px-5 py-5">{children}</div>
+      </div>
+    </main>
   );
 }
 
@@ -143,48 +145,6 @@ export function Understood() {
       {t(lang, "heard")}: {heard}
       <span className="mt-1 block">{t(lang, "matched", { what: t(lang, intentKey(intent)) })}</span>
     </p>
-  );
-}
-
-export function LangSwitch({ speakOnChange = false }: { speakOnChange?: boolean }) {
-  const lang = useMitra((state) => state.lang);
-  const setLang = useMitra((state) => state.setLang);
-  const name = useMitra((state) => state.seniorName);
-  const rate = useMitra((state) => state.rate);
-  const [busy, setBusy] = useState<Lang | null>(null);
-
-  return (
-    <div
-      className="-mx-1 flex gap-2 overflow-x-auto overscroll-contain px-1 pb-1"
-      role="group"
-      aria-label={t(lang, "language")}
-    >
-      {LANGUAGES.map((option) => {
-        const selected = option.code === lang;
-        return (
-          <button
-            key={option.code}
-            type="button"
-            aria-pressed={selected}
-            disabled={busy !== null && busy !== option.code}
-            onClick={() => {
-              if (option.code === lang || busy) return;
-              setBusy(option.code);
-              void ensureLang(option.code).then(() => {
-                setLang(option.code);
-                setBusy(null);
-                if (speakOnChange) speak(t(option.code, "welcomeSpeak", { name }), option.code, rate);
-              });
-            }}
-            className={`min-h-14 shrink-0 rounded-full px-4 text-lg font-semibold ${
-              selected ? "bg-forest text-paper" : "border border-line bg-card text-ink"
-            }`}
-          >
-            {busy === option.code ? "…" : option.native}
-          </button>
-        );
-      })}
-    </div>
   );
 }
 

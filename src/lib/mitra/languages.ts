@@ -26,7 +26,7 @@ export function localeOf(lang: Lang): string {
 }
 
 const PICKER_FONTS =
-  "https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@600;700&family=Noto+Sans+Gujarati:wght@600;700&family=Noto+Sans+Gurmukhi:wght@600;700&family=Noto+Sans+Kannada:wght@600;700&family=Noto+Sans+Malayalam:wght@600;700&family=Noto+Sans+Oriya:wght@600;700&family=Noto+Sans+Tamil:wght@600;700&family=Noto+Sans+Telugu:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap";
+  "https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@600;700&family=Noto+Sans+Bengali:wght@600;700&family=Noto+Sans+Devanagari:wght@600;700&family=Noto+Sans+Gujarati:wght@600;700&family=Noto+Sans+Gurmukhi:wght@600;700&family=Noto+Sans+Kannada:wght@600;700&family=Noto+Sans+Malayalam:wght@600;700&family=Noto+Sans+Oriya:wght@600;700&family=Noto+Sans+Tamil:wght@600;700&family=Noto+Sans+Telugu:wght@600;700&display=swap";
 
 export function preloadPickerFonts(): void {
   if (typeof document === "undefined" || document.getElementById("aria-fonts")) return;

@@ -24,7 +24,7 @@ export const Route = createRootRoute({
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Hind:wght@500;600;700&family=Noto+Sans+Tamil:wght@500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Hind:wght@500;600;700&family=Noto+Naskh+Arabic:wght@500;600;700&family=Noto+Sans+Bengali:wght@500;600;700&family=Noto+Sans+Devanagari:wght@500;600;700&family=Noto+Sans+Gujarati:wght@500;600;700&family=Noto+Sans+Gurmukhi:wght@500;600;700&family=Noto+Sans+Kannada:wght@500;600;700&family=Noto+Sans+Malayalam:wght@500;600;700&family=Noto+Sans+Oriya:wght@500;600;700&family=Noto+Sans+Tamil:wght@500;600;700&family=Noto+Sans+Telugu:wght@500;600;700&display=swap",
       },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },

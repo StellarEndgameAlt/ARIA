@@ -5,6 +5,7 @@ import { warmVoices } from "@/lib/mitra/speech";
 import { takePendingLang, useMitra } from "@/lib/mitra/store";
 import { Shell } from "@/components/mitra/ui";
 import {
+  AboutScreen,
   AskScreen,
   CallListScreen,
   CallingScreen,
@@ -65,7 +66,8 @@ export function MitraApp() {
 
   return (
     <Shell>
-      {screen === "language" ? <LanguageScreen /> : null}
+      {screen === "language" ? <LanguageScreen mode="first" /> : null}
+      {screen === "languages" ? <LanguageScreen mode="change" /> : null}
       {screen === "home" ? <HomeScreen /> : null}
       {screen === "listen" ? <ListenScreen /> : null}
       {screen === "medicine" ? <MedicineScreen /> : null}
@@ -76,6 +78,7 @@ export function MitraApp() {
       {screen === "safety" ? <SafetyScreen /> : null}
       {screen === "fallback" ? <FallbackScreen /> : null}
       {screen === "family" ? <FamilyScreen /> : null}
+      {screen === "about" ? <AboutScreen /> : null}
     </Shell>
   );
 }

@@ -1,5 +1,15 @@
 import type { Lang } from "./languages";
-import { isLang } from "./languages";
+import bn from "./copy/bn";
+import gu from "./copy/gu";
+import hi from "./copy/hi";
+import kn from "./copy/kn";
+import ml from "./copy/ml";
+import mr from "./copy/mr";
+import or from "./copy/or";
+import pa from "./copy/pa";
+import ta from "./copy/ta";
+import te from "./copy/te";
+import ur from "./copy/ur";
 
 const en = {
   hello: "Namaste,",
@@ -12,8 +22,8 @@ const en = {
   speakSlowly: "Speak slowly. I am here.",
   cancel: "Stop",
   heard: "I heard",
-  notUnderstood: "I did not understand. Please say medicine, call, or ask the time.",
-  noisy: "I could not hear you clearly. It may be noisy. Try again somewhere quiet, or tap a button.",
+  notUnderstood: "I did not understand. Please say that again, or tap a button.",
+  noisy: "I could not hear you clearly. Please say it again somewhere quiet.",
   noMic: "This phone cannot use the microphone right now. You can still tap a button. That works the same.",
   tryAgain: "Try again",
   orTap: "Or tap one of these",
@@ -42,7 +52,7 @@ const en = {
   stillScheduled: "I will remind you at {time}.",
   goOn: "All right",
   safetyAdvice:
-    "I cannot give medical advice. Please take only what the doctor prescribed, the way your family saved it here. If you are unsure, I can call your family.",
+    "I cannot give a medical decision. Please check with your doctor or pharmacist, and take only what they prescribed. If you are unsure, I can call your family.",
   safetyUnwell:
     "I am sorry you feel unwell. I cannot give medical advice. If you need help, I can call your family now.",
   callThem: "Call my family",
@@ -149,67 +159,22 @@ const en = {
 
 export type CopyKey = keyof typeof en;
 
-
 export type Copy = { [K in CopyKey]: string };
 
-const cache = new Map<Lang, Copy>([["en", en]]);
-const inflight = new Map<Lang, Promise<Copy>>();
+const dicts: Record<Lang, Copy> = { en, hi, bn, te, mr, ta, ur, gu, kn, or, ml, pa };
 
-const loaders: Record<Exclude<Lang, "en">, () => Promise<{ default: Copy }>> = {
-  hi: () => import("./copy/hi"),
-  bn: () => import("./copy/bn"),
-  te: () => import("./copy/te"),
-  mr: () => import("./copy/mr"),
-  ta: () => import("./copy/ta"),
-  ur: () => import("./copy/ur"),
-  gu: () => import("./copy/gu"),
-  kn: () => import("./copy/kn"),
-  or: () => import("./copy/or"),
-  ml: () => import("./copy/ml"),
-  pa: () => import("./copy/pa"),
-};
-
-export function hasLang(lang: Lang): boolean {
-  return cache.has(lang);
+export function hasLang(_lang: Lang): boolean {
+  return true;
 }
 
 export function ensureLang(lang: Lang): Promise<Copy> {
-  const ready = cache.get(lang);
-  if (ready) return Promise.resolve(ready);
-  if (lang === "en") return Promise.resolve(en);
-  let pending = inflight.get(lang);
-  if (!pending) {
-    pending = loaders[lang]().then((mod) => {
-      cache.set(lang, mod.default);
-      inflight.delete(lang);
-      return mod.default;
-    });
-    inflight.set(lang, pending);
-  }
-  return pending;
+  return Promise.resolve(dicts[lang] ?? en);
 }
 
-export function prefetchLangs(): void {
-  for (const code of Object.keys(loaders) as Exclude<Lang, "en">[]) void ensureLang(code);
-}
-
-function peekSavedLang(): Lang | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem("mitra-v1");
-    if (!raw) return null;
-    const lang = JSON.parse(raw)?.state?.lang;
-    return typeof lang === "string" && isLang(lang) ? lang : null;
-  } catch {
-    return null;
-  }
-}
-
-const saved = peekSavedLang();
-if (saved && saved !== "en") void ensureLang(saved);
+export function prefetchLangs(): void {}
 
 export function t(lang: Lang, key: CopyKey, vars?: Record<string, string>): string {
-  const dict = cache.get(lang) ?? en;
+  const dict = dicts[lang] ?? en;
   let text = dict[key] ?? en[key];
   if (vars) {
     for (const [name, value] of Object.entries(vars)) text = text.replaceAll(`{${name}}`, value);

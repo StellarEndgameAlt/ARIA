@@ -18,6 +18,10 @@ export type Intent =
   | { type: "next" }
   | { type: "advice" }
   | { type: "unwell" }
+  | { type: "hello" }
+  | { type: "need_time" }
+  | { type: "remind_set"; time: string }
+  | { type: "noise" }
   | { type: "unknown" };
 
 const STOP = new Set([
@@ -117,6 +121,81 @@ function isGenericFamily(text: string): boolean {
   return has(text, ["family", "परिवार", "குடும்ப"]);
 }
 
+const NAME_SKIP = new Set([
+  ...STOP,
+  "son",
+  "daughter",
+  "grandson",
+  "beta",
+  "beti",
+  "pota",
+  "remind",
+  "reminder",
+  "medicine",
+  "tablet",
+  "tablets",
+  "take",
+  "taking",
+  "about",
+  "at",
+  "am",
+  "pm",
+  "morning",
+  "evening",
+  "night",
+  "afternoon",
+  "hello",
+  "hear",
+  "noise",
+  "noisy",
+  "background",
+  "today",
+  "todays",
+  "what",
+  "is",
+  "the",
+  "my",
+  "me",
+  "to",
+  "for",
+  "in",
+  "on",
+  "of",
+  "if",
+  "i",
+  "you",
+  "can",
+  "your",
+]);
+
+export function extractTime(raw: string): string | null {
+  const text = raw.toLowerCase().replace(/\./g, "");
+  const match = text.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b/);
+  if (!match) return null;
+  let hour = Number(match[1]);
+  const minute = Number(match[2] ?? "0");
+  if (!Number.isFinite(hour) || !Number.isFinite(minute) || minute > 59 || hour > 23) return null;
+  const meridiem = match[3];
+  if (meridiem === "pm" && hour < 12) hour += 12;
+  if (meridiem === "am" && hour === 12) hour = 0;
+  if (!meridiem && hour <= 12 && /\b(evening|night|afternoon)\b/.test(text)) hour += hour === 12 ? 0 : 12;
+  if (hour > 23) return null;
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+}
+
+function unknownCalledName(raw: string, contacts: Contact[]): string {
+  const parts = raw.replace(/[?.!।,()]/g, " ").split(/\s+/).filter(Boolean);
+  let unknown = "";
+  for (const part of parts) {
+    const low = part.toLowerCase();
+    if (NAME_SKIP.has(low) || low.length < 2 || /^\d/.test(low)) continue;
+    if (contacts.some((contact) => contact.name.toLowerCase() === low)) continue;
+    if (!/^[a-z][a-z'-]{1,}$/i.test(part)) continue;
+    unknown = part[0].toUpperCase() + part.slice(1).toLowerCase();
+  }
+  return unknown;
+}
+
 export function parseUtterance(
   raw: string,
   contacts: Contact[],
@@ -133,6 +212,10 @@ export function parseUtterance(
       "side effect",
       "should i take",
       "medical advice",
+      "two dose",
+      "doses",
+      "missed one",
+      "missed a dose",
       "stop my medicine",
       "दो गोली",
       "दो गोल",
@@ -170,13 +253,25 @@ export function parseUtterance(
     if (isYes(text)) return { type: "yes" };
   }
 
-  const wantsCall = has(text, ["call", "phone", "dial", "कॉल", "फोन", "बुलाओ", "அழை", "போன்"]);
-  const contact = findContact(text, contacts);
-  if (contact) return { type: "call", contactId: contact.id };
+  if (has(text, ["noise", "noisy", "background", "शोर", "இரைச்சல்", "গোলমাল", "శబ్దం"])) {
+    return { type: "noise" };
+  }
 
+  const wantsCall = has(text, ["call", "phone", "dial", "कॉल", "फोन", "बुलाओ", "அழை", "போன்"]);
+  const wantsRemind = has(text, ["remind", "reminder", "याद", "நினைவூட்டு", "মনে করিয়ে"]);
+
+  if (!wantsCall && !wantsRemind && has(text, ["can you hear", "hello", "hear me"])) {
+    return { type: "hello" };
+  }
+
+  const named = contacts.find((contact) => hasName(text, contact.name));
+  const unknownName = unknownCalledName(raw, contacts);
   if (wantsCall) {
-    if (isGenericFamily(text) || !leftoverName(raw)) return { type: "call_list" };
-    return { type: "unknown_name", name: leftoverName(raw) };
+    if (unknownName) return { type: "unknown_name", name: unknownName };
+    if (named) return { type: "call", contactId: named.id };
+    const byRelation = findContact(text, contacts);
+    if (byRelation) return { type: "call", contactId: byRelation.id };
+    return { type: "call_list" };
   }
 
   if (mode === "medicine") {
@@ -186,7 +281,30 @@ export function parseUtterance(
     }
   }
 
-  if (has(text, ["weather", "मौसम", "வானிலை"])) return { type: "weather" };
+  if (wantsRemind) {
+    const clock = extractTime(raw);
+    if (clock) return { type: "remind_set", time: clock };
+    return { type: "need_time" };
+  }
+
+  if (
+    has(text, [
+      "weather",
+      "मौसम",
+      "வானிலை",
+      "আবহাওয়া",
+      "వాతావరణం",
+      "हवामान",
+      "موسم",
+      "હવામાન",
+      "ಹವಾಮಾನ",
+      "ପାଣିପାଗ",
+      "കാലാവസ്ഥ",
+      "ਮੌਸਮ",
+    ])
+  ) {
+    return { type: "weather" };
+  }
   if (has(text, ["who are you", "who", "कौन हो", "कौन", "யார்", "நீ யார்"])) return { type: "who" };
   if (has(text, ["something kind", "kind word", "अच्छी बात", "நல்ல வார்த்தை"])) return { type: "kind" };
   if (has(text, ["next tablet", "next medicine", "when is my next", "अगली गोली", "अगली दवा", "அடுத்த மாத்திரை", "அடுத்த"])) {
@@ -234,6 +352,13 @@ export function intentKey(intent: Intent): CopyKey {
       return "intentAdvice";
     case "unwell":
       return "intentUnwell";
+    case "hello":
+      return "intentWho";
+    case "need_time":
+    case "remind_set":
+      return "intentMedicine";
+    case "noise":
+      return "intentUnknown";
     case "took":
       return "intentTook";
     case "later":

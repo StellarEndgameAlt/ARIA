@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import {
+  Check,
+  CloudSun,
   MessageCircle,
   Mic,
   Phone,
   PhoneOff,
   Pill,
   Plus,
+  UserRound,
   Volume2,
 } from "lucide-react";
 import {
@@ -26,15 +29,16 @@ import {
   todayKey,
   tx,
 } from "@/lib/mitra/data";
-import { ensureLang, prefetchLangs, t } from "@/lib/mitra/i18n";
+import { t } from "@/lib/mitra/i18n";
 import { LANGUAGES, preloadPickerFonts, type Lang } from "@/lib/mitra/languages";
+import { phrase, yearsOld } from "@/lib/mitra/phrases";
 import { speak } from "@/lib/mitra/speech";
-import { noteLangChoice, useMitra } from "@/lib/mitra/store";
+import { noteLangChoice, type Role, useMitra } from "@/lib/mitra/store";
+import { loadWeather, peekWeather } from "@/lib/mitra/weather";
 import {
   BackButton,
   BigButton,
   Bubble,
-  LangSwitch,
   Mark,
   Understood,
   Wordmark,
@@ -54,59 +58,69 @@ function useNow() {
   return now;
 }
 
-export function LanguageScreen() {
+export function LanguageScreen({ mode }: { mode: "first" | "change" }) {
+  const lang = useMitra((state) => state.lang);
   const chooseLang = useMitra((state) => state.chooseLang);
+  const setLang = useMitra((state) => state.setLang);
+  const goHome = useMitra((state) => state.goHome);
   const name = useMitra((state) => state.seniorName);
   const rate = useMitra((state) => state.rate);
-  const [busy, setBusy] = useState<Lang | null>(null);
 
   useEffect(() => {
     preloadPickerFonts();
-    const id = window.setTimeout(() => prefetchLangs(), 250);
-    return () => window.clearTimeout(id);
   }, []);
 
-  async function pick(code: Lang) {
-    if (busy) return;
-    setBusy(code);
+  function pick(code: Lang) {
     noteLangChoice(code);
-    try {
-      await ensureLang(code);
+    if (mode === "first") {
       chooseLang(code);
       speak(t(code, "welcomeSpeak", { name }), code, rate);
-    } catch {
-      setBusy(null);
+      return;
     }
+    setLang(code);
+    speak(phrase(code, "switched"), code, rate);
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-5">
-      <div className="flex shrink-0 flex-col items-center gap-2 text-center">
-        <Mark badge className="size-16" />
-        <h1 className="text-4xl font-semibold tracking-tight text-forest">ARIA</h1>
-        <p className="text-lg font-medium text-muted">Your friendly voice assistant</p>
+    <div className="flex flex-col gap-4 pb-4">
+      {mode === "change" ? <BackButton label={t(lang, "back")} onClick={goHome} /> : null}
+      <div className="sticky top-0 z-10 -mx-5 bg-paper px-5 pb-3">
+        <div className="flex items-center gap-3">
+          <Mark badge className="size-14 shrink-0" />
+          <div className="min-w-0">
+            <h1 className="text-3xl font-semibold tracking-tight text-forest">ARIA</h1>
+            <p className="text-base font-medium text-muted">{t(lang, "tagline")}</p>
+          </div>
+        </div>
+        <p className="mt-4 text-2xl font-semibold">{phrase(lang, "chooseTitle")}</p>
+        <p className="mt-1 text-lg leading-snug text-pretty text-muted">{phrase(lang, "chooseHint")}</p>
       </div>
-      <p className="shrink-0 text-center text-xl font-semibold">Choose your language</p>
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain pb-2">
-        {LANGUAGES.map((option) => (
-          <button
-            key={option.code}
-            type="button"
-            disabled={busy !== null}
-            onClick={() => void pick(option.code)}
-            className="flex min-h-20 w-full items-center justify-between gap-3 rounded-3xl border border-line bg-card px-5 text-left disabled:opacity-70"
-          >
-            <span className="min-w-0">
-              <span className="block text-3xl leading-tight font-semibold">{option.native}</span>
-              {option.code === "en" ? null : (
-                <span className="block text-lg text-muted">{option.english}</span>
-              )}
-            </span>
-            <span className="text-2xl font-semibold text-forest" aria-hidden="true">
-              {busy === option.code ? "…" : ""}
-            </span>
-          </button>
-        ))}
+      <div className="overflow-hidden rounded-3xl border border-line bg-card" role="listbox" aria-label={phrase(lang, "chooseTitle")}>
+        {LANGUAGES.map((option, index) => {
+          const selected = mode === "change" && option.code === lang;
+          return (
+            <button
+              key={option.code}
+              type="button"
+              role="option"
+              lang={option.locale}
+              dir={option.code === "ur" ? "rtl" : "ltr"}
+              aria-selected={selected}
+              onClick={() => pick(option.code)}
+              className={`flex min-h-20 w-full items-center justify-between gap-3 px-5 text-left ${
+                index > 0 ? "border-t border-line" : ""
+              } ${selected ? "bg-forest text-paper" : "text-ink"}`}
+            >
+              <span className="min-w-0">
+                <span className="block text-3xl leading-tight font-semibold">{option.native}</span>
+                {option.code === "en" ? null : (
+                  <span className={`block text-lg ${selected ? "text-paper/80" : "text-muted"}`}>{option.english}</span>
+                )}
+              </span>
+              {selected ? <Check className="size-7 shrink-0" strokeWidth={2.5} /> : null}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -121,7 +135,11 @@ export function HomeScreen() {
   const openMedicine = useMitra((state) => state.openMedicine);
   const openCall = useMitra((state) => state.openCall);
   const openAsk = useMitra((state) => state.openAsk);
+  const openWeather = useMitra((state) => state.openWeather);
   const openFamily = useMitra((state) => state.openFamily);
+  const openAbout = useMitra((state) => state.openAbout);
+  const openLanguages = useMitra((state) => state.openLanguages);
+  const role = useMitra((state) => state.role);
   const now = useNow();
   const { start } = useVoice();
   const due = now
@@ -138,7 +156,16 @@ export function HomeScreen() {
           {t(lang, "ready")}
         </span>
       </div>
-      <LangSwitch speakOnChange />
+      <button
+        type="button"
+        onClick={openLanguages}
+        className="flex min-h-16 items-center justify-between gap-3 rounded-3xl border border-line bg-card px-5 text-left"
+      >
+        <span className="text-xl font-semibold">{phrase(lang, "languageBtn")}</span>
+        <span className="text-2xl font-semibold text-forest">
+          {LANGUAGES.find((item) => item.code === lang)?.native}
+        </span>
+      </button>
       <div>
         <p className="text-2xl text-muted">{t(lang, "hello")}</p>
         <h1 className="text-5xl leading-tight font-semibold">{name}</h1>
@@ -180,19 +207,36 @@ export function HomeScreen() {
           onClick={openCall}
         />
         <BigButton
+          title={phrase(lang, "weatherBtn")}
+          sub={phrase(lang, "weatherSub")}
+          icon={<CloudSun className="size-8" strokeWidth={2.25} />}
+          onClick={openWeather}
+        />
+        <BigButton
           title={t(lang, "ask")}
           sub={t(lang, "askSub")}
           icon={<MessageCircle className="size-8" strokeWidth={2.25} />}
           onClick={openAsk}
         />
       </div>
-      <button
-        type="button"
-        onClick={openFamily}
-        className="mx-auto min-h-14 px-3 text-lg font-semibold text-forest"
-      >
-        {t(lang, "family")}
-      </button>
+      <div className="flex flex-col gap-2">
+        <button
+          type="button"
+          onClick={openAbout}
+          className="flex min-h-14 flex-wrap items-center justify-center gap-x-2 gap-y-1 px-3 text-center text-lg font-semibold text-forest"
+        >
+          <UserRound className="size-5" strokeWidth={2.25} />
+          {phrase(lang, "about")}
+          <span className="text-muted">· {phrase(lang, role === "parent" ? "roleParent" : role === "student" ? "roleStudent" : "roleSenior")}</span>
+        </button>
+        <button
+          type="button"
+          onClick={openFamily}
+          className="mx-auto min-h-14 px-3 text-lg font-semibold text-forest"
+        >
+          {t(lang, "family")}
+        </button>
+      </div>
     </div>
   );
 }
@@ -540,13 +584,29 @@ export function AskScreen() {
   const goHome = useMitra((state) => state.goHome);
   const submit = useMitra((state) => state.submit);
   const [now] = useState(() => new Date());
+  const [forecast, setForecast] = useState<{ lang: Lang; text: string } | null>(null);
   const { start } = useVoice();
   const next = focusMedicine(medicines, now, taken[todayKey(now)] ?? [], snooze);
+
+  useEffect(() => {
+    if (ask !== "weather") return;
+    let live = true;
+    const cached = peekWeather(lang);
+    setForecast({ lang, text: cached ?? phrase(lang, "weatherWait") });
+    if (!cached) {
+      void loadWeather(lang).then((text) => {
+        if (live) setForecast({ lang, text });
+      });
+    }
+    return () => {
+      live = false;
+    };
+  }, [ask, lang]);
 
   let line = t(lang, "askIntro");
   if (ask === "time") line = t(lang, "aTime", { time: formatTime(now, lang) });
   if (ask === "date") line = t(lang, "aDate", { date: formatDate(now, lang) });
-  if (ask === "weather") line = t(lang, "aWeather");
+  if (ask === "weather") line = forecast?.lang === lang ? forecast.text : phrase(lang, "weatherWait");
   if (ask === "who") line = t(lang, "aWho");
   if (ask === "kind") line = t(lang, "aKind", { name });
   if (ask === "next") {
@@ -682,6 +742,7 @@ export function FamilyScreen() {
   const medicines = useMitra((state) => state.medicines);
   const contacts = useMitra((state) => state.contacts);
   const goHome = useMitra((state) => state.goHome);
+  const openLanguages = useMitra((state) => state.openLanguages);
   const addMedicine = useMitra((state) => state.addMedicine);
   const addContact = useMitra((state) => state.addContact);
   const restore = useMitra((state) => state.restore);
@@ -726,7 +787,16 @@ export function FamilyScreen() {
 
       <div className="flex flex-col gap-2">
         <p className="text-lg font-semibold">{t(lang, "language")}</p>
-        <LangSwitch />
+        <button
+          type="button"
+          onClick={openLanguages}
+          className="flex min-h-16 items-center justify-between gap-3 rounded-3xl border border-line bg-card px-5 text-left"
+        >
+          <span className="text-xl font-semibold">{phrase(lang, "languageBtn")}</span>
+          <span className="text-2xl font-semibold text-forest">
+            {LANGUAGES.find((item) => item.code === lang)?.native}
+          </span>
+        </button>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -1157,5 +1227,101 @@ function Field({
       {label}
       <input className={fieldClass} value={value} onChange={(event) => onChange(event.target.value)} />
     </label>
+  );
+}
+
+const roles: { id: Role; key: "roleSenior" | "roleParent" | "roleStudent" }[] = [
+  { id: "senior", key: "roleSenior" },
+  { id: "parent", key: "roleParent" },
+  { id: "student", key: "roleStudent" },
+];
+
+export function AboutScreen() {
+  const lang = useMitra((state) => state.lang);
+  const name = useMitra((state) => state.seniorName);
+  const setSeniorName = useMitra((state) => state.setSeniorName);
+  const birth = useMitra((state) => state.birth);
+  const setBirth = useMitra((state) => state.setBirth);
+  const role = useMitra((state) => state.role);
+  const setRole = useMitra((state) => state.setRole);
+  const rate = useMitra((state) => state.rate);
+  const goHome = useMitra((state) => state.goHome);
+  const [draft, setDraft] = useState(name);
+  const [note, setNote] = useState("");
+  const age = yearsOld(birth);
+
+  useEffect(() => {
+    setDraft(name);
+  }, [name]);
+
+  function save() {
+    if (draft.trim()) setSeniorName(draft);
+    else setDraft(name);
+    setNote(phrase(lang, "savedHere"));
+    speak(phrase(lang, "savedHere"), lang, rate);
+  }
+
+  return (
+    <div className="flex flex-col gap-5 pb-6">
+      <BackButton label={t(lang, "backHome")} onClick={goHome} />
+      <div>
+        <h1 className="text-4xl font-semibold">{phrase(lang, "about")}</h1>
+        <p className="mt-2 text-lg leading-snug text-pretty text-muted">{phrase(lang, "aboutLead")}</p>
+      </div>
+      <label className="flex flex-col gap-2 text-lg font-semibold">
+        {phrase(lang, "yourName")}
+        <input
+          className={fieldClass}
+          value={draft}
+          maxLength={24}
+          autoComplete="name"
+          onChange={(event) => setDraft(event.target.value)}
+        />
+      </label>
+      <label className="flex flex-col gap-2 text-lg font-semibold">
+        {phrase(lang, "birth")}
+        <input
+          className={fieldClass}
+          type="date"
+          value={birth}
+          min="1900-01-01"
+          max={todayKey()}
+          onChange={(event) => {
+            setBirth(event.target.value);
+            setNote(phrase(lang, "savedHere"));
+          }}
+        />
+        {age !== null ? (
+          <span className="text-xl font-semibold text-forest">{phrase(lang, "years", { n: String(age) })}</span>
+        ) : null}
+      </label>
+      <div className="flex flex-col gap-2">
+        <p className="text-lg font-semibold">{phrase(lang, "who")}</p>
+        {roles.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            aria-pressed={role === item.id}
+            onClick={() => {
+              setRole(item.id);
+              setNote(phrase(lang, "savedHere"));
+            }}
+            className={`min-h-16 rounded-3xl px-5 text-left text-2xl font-semibold ${
+              role === item.id ? "bg-forest text-paper" : "border border-line bg-card text-ink"
+            }`}
+          >
+            {phrase(lang, item.key)}
+          </button>
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={save}
+        className="min-h-16 rounded-3xl bg-forest text-2xl font-semibold text-paper"
+      >
+        {t(lang, "save")}
+      </button>
+      {note ? <p className="text-center text-lg font-semibold text-forest">{note}</p> : null}
+    </div>
   );
 }
